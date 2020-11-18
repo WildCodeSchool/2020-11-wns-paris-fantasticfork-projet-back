@@ -29,6 +29,15 @@ module.exports = {
             res.json({ success: false, error });
         }
     },
+
+    /**
+     * Envoie les commentaires de l'article dont l'id est passé en paramètre
+     * 
+     * @param {Object} req - Un objet requête d'express
+     * @param {ObjectId} req.params.topicID - L'id du topic dont on récupère les commentaires
+     * @param {Object} res - Un objet reponse d'express
+     * 
+     */
     readCommentsByTopic: async (req, res) => {
         await CommentModel.init(); // ?
         try {
