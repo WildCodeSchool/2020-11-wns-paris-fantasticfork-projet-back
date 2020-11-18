@@ -2,7 +2,7 @@
 const TopicController = require('./src/controllers/topic.js');
 const MessageController = require('./src/controllers/message.js');
 
-// dependancies
+// dependencies
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
