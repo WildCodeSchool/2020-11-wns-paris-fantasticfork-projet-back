@@ -27,7 +27,12 @@ const TopicSchema = new mongoose.Schema({
       type: String,
       required: true
     },
+    title: {
+      type: String,
+      required: true
+    },
     urls: [String]
+
 });
 
 module.exports = mongoose.model('Topics-v2', TopicSchema)
