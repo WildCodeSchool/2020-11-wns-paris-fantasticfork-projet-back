@@ -4,9 +4,9 @@ const CommentModel = require('../models/Comment')
 
 module.exports = {
     /**
-     * Update un document "sujet" en ajoutant un message au tableau "reponses"
+     * Crée un document "topic" et renvoi le document si il a bien été créé
      * 
-     * @param {Object} req  - Un objet requête d'express
+     * @param {Object} req - Un objet requête d'express
      * @param {Object} req.body - Le document "sujet" à enregistrer
      * @param {Object} res - Un objet reponse d'express
      * 
@@ -27,9 +27,9 @@ module.exports = {
     },
 
     /**
-     * Renvoie tous les sujets
+     * Renvoie tous les topics
      * 
-     * @param {Object} req  - Un objet requête d'express
+     * @param {Object} req - Un objet requête d'express
      * @param {Object} res - Un objet reponse d'express
      * 
      */
@@ -42,15 +42,6 @@ module.exports = {
             const comments = await CommentModel.find({})
             .populate('author')
 
-            comments.forEach( (comment) => {
-                console.log(comment)
-                console.log("COMMENTS : ", comment.topicID)
-            })
-
-            topics.forEach( (topic) => {
-                console.log("TOPICS : ", topic._id)
-            })
-
             let topicsWithComments = nestCommentsInTopics(topics, comments)
 
             res.json({ success: true, body: topicsWithComments });
@@ -62,9 +53,9 @@ module.exports = {
     },
 
     /**
-     * Renvoie un sujet en fonction de l'id passé en paramètres
+     * Renvoie un topic en fonction de l'id passé en paramètres
      * 
-     * @param {Object} req  - Un objet requête d'express
+     * @param {Object} req - Un objet requête d'express
      * @param {Object} req.params.id - L'id du document à renvoyer
      * @param {Object} res - Un objet reponse d'express
      * 
@@ -80,9 +71,9 @@ module.exports = {
             const comments = await CommentModel.find({ topicID: req.params.id })
             .populate('author')
 
-            const nestedArrays = nestCommentsInTopics(topics, comments)
+            const topicsWithComments = nestCommentsInTopics(topics, comments)
 
-            res.json({ success: true, body: nestedArrays });
+            res.json({ success: true, body: topicsWithComments });
         } 
         catch (error) {
             console.log("err: ", error);
@@ -91,6 +82,17 @@ module.exports = {
     },
 };
 
+
+/**
+ * Insère les commentaires dans les topics correspondants
+ * 
+ * @param {Array} topics - Un objet requête d'express
+ * @param {ObjectId} topics[]._id - l'id du topic
+ * @param {Array} comments - Un objet reponse d'express
+ * @param {ObjectId} comments[].topicID - L'id du topic correspondant au commentaire
+ * @returns {Array} - Un tableau de topics avec leurs commentaires
+ * 
+ */
 function nestCommentsInTopics(topics, comments) {
     let nestedArrays = []
     topics.forEach( (topic) => {
