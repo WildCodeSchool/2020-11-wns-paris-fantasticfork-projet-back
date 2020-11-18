@@ -1,5 +1,5 @@
 // controllers
-const SubjectController = require('./src/controllers/subject.js');
+const TopicController = require('./src/controllers/topic.js');
 const MessageController = require('./src/controllers/message.js');
 
 // dependancies
@@ -18,10 +18,10 @@ app.use(express.urlencoded({
 }));
 
 // routes
-app.get('/subjects', SubjectController.read);
-app.get('/subject/:id', SubjectController.readOne);
-app.put('/subject', SubjectController.create);
-app.post('/message/:sujetID', MessageController.create);
+app.get('/topics', TopicController.read);
+app.get('/topic/:id', TopicController.readOne);
+app.put('/topic', TopicController.create);
+app.post('/message/:topicID', MessageController.create);
 
 // db connect
 mongoose.connect("mongodb+srv://fantastic:fork@stud-connect.zfeul.mongodb.net/stud-connect?retryWrites=true&w=majority", {

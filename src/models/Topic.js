@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const SujetSchema = new mongoose.Schema({
+const TopicSchema = new mongoose.Schema({
   username: String,
   subject: String,
   body: String,
@@ -13,4 +13,4 @@ const SujetSchema = new mongoose.Schema({
   }]
 });
 
-module.exports = mongoose.model('Subject', SujetSchema);
+module.exports = mongoose.model('Topic', TopicSchema);

@@ -1,5 +1,5 @@
 // model
-const SubjectModel = require("../models/Subject");
+const TopicModel = require("../models/Topic");
 
 module.exports = {
     /**
@@ -13,16 +13,15 @@ module.exports = {
      * 
      */
     create: async (req, res) => {
-        await SubjectModel.init(); // ?
+        await TopicModel.init(); // ?
 
         try {
-            let subject = await SubjectModel.findOneAndUpdate(
-                { _id: req.params.sujetID },
+            let topic = await TopicModel.findOneAndUpdate(
+                { _id: req.params.topicID },
                 { $push: { responses: req.body } },
                 { new: true }
             );
-            console.log(subject)
-            res.json({ success: true, body: subject.responses });
+            res.json({ success: true, body: topic.responses });
         } 
         catch (error) {
             console.log("err: ", error);

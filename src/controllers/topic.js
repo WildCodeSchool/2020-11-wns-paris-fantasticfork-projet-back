@@ -1,4 +1,4 @@
-const SubjectModel = require("../models/Subject");
+const TopicModel = require("../models/Topic");
 
 module.exports = {
     /**
@@ -10,10 +10,10 @@ module.exports = {
      * 
      */
     create: async (req, res) => {
-        await SubjectModel.init(); // ?
+        await TopicModel.init(); // ?
 
         try {
-            const user = new SubjectModel(req.body);
+            const user = new TopicModel(req.body);
             const result = await user.save();
             res.json({ success: true, body: result }); 
         } 
@@ -32,7 +32,7 @@ module.exports = {
      */
     read: async (req, res) => {
         try {
-            const result = await SubjectModel.find({});
+            const result = await TopicModel.find({});
             res.json({ success: true, body: result });
         } 
         catch (error) {
@@ -50,10 +50,10 @@ module.exports = {
      * 
      */
     readOne: async (req, res) => {
-        await SubjectModel.init(); // ?
+        await TopicModel.init(); // ?
 
         try {
-            const result = await SubjectModel.findOne({ _id: req.params.id });
+            const result = await TopicModel.findOne({ _id: req.params.id });
             res.json({ success: true, body: result });
         } 
         catch (error) {
