@@ -1,5 +1,5 @@
 // controllers
-const SujetController = require('./src/controllers/sujet.js');
+const SubjectController = require('./src/controllers/subject.js');
 const MessageController = require('./src/controllers/message.js');
 
 // dependancies
@@ -18,9 +18,9 @@ app.use(express.urlencoded({
 }));
 
 // routes
-app.get('/sujets', SujetController.read);
-app.get('/sujet/:id', SujetController.readOne);
-app.put('/sujet', SujetController.create);
+app.get('/subjects', SubjectController.read);
+app.get('/subject/:id', SubjectController.readOne);
+app.put('/subject', SubjectController.create);
 app.post('/message/:sujetID', MessageController.create);
 
 // db connect
