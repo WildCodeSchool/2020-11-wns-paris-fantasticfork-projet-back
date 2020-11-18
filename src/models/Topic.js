@@ -1,9 +1,15 @@
 const mongoose = require("mongoose");
 
-const CommentSchema = new mongoose.Schema({
-    author!: {
+// require needed models
+require('../models/User')
+require('../models/Comment')
+require('../models/Tag')
+
+const TopicSchema = new mongoose.Schema({
+    author: {
         type: mongoose.Schema.Types.ObjectId, 
-        ref: 'User'
+        ref: 'User',
+        required: true
     },
     comments: [
       {
@@ -14,11 +20,14 @@ const CommentSchema = new mongoose.Schema({
     tags: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Tags'
+        ref: 'Tag'
       }
     ],
-    body!: String,
+    body: {
+      type: String,
+      required: true
+    },
     urls: [String]
 });
 
-module.exports = mongoose.Model('Topic', CommentSchema)
+module.exports = mongoose.model('Topics-v2', TopicSchema)
