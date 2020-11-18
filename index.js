@@ -1,11 +1,14 @@
 // controllers
 const TopicController = require('./src/controllers/topic.js');
 const CommentController = require('./src/controllers/comment.js');
+const UserController = require('./src/controllers/user.js')
 
 // dependencies
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const dotenv = require('dotenv');
+dotenv.config();
 
 // init app
 const app = express();
@@ -25,10 +28,10 @@ app.post('/topic', TopicController.create);
 app.get('/comments/:topicID', CommentController.readCommentsByTopic);
 app.post('/comment', CommentController.create);
 
-
+app.post('/user', UserController.create);
 
 // db connect
-mongoose.connect("mongodb+srv://fantastic:fork@stud-connect.zfeul.mongodb.net/stud-connect?retryWrites=true&w=majority", {
+mongoose.connect(process.env.DB_CONN_STRING, {
         useCreateIndex: true,
         autoIndex: true,
         useNewUrlParser: true,
