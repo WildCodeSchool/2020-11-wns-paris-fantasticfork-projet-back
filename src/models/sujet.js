@@ -1,7 +1,9 @@
 const mongoose = require("mongoose");
 const SujetSchema = new mongoose.Schema({
+  
   sujet: String,
-  messageSujet: String,
+  message: String,
+  date: String,
   reponses: [
     {
       date: String,
@@ -13,4 +15,4 @@ const SujetSchema = new mongoose.Schema({
   tags: [String],
 });
 
-module.exports = mongoose.model('sujet3', SujetSchema);
+module.exports = mongoose.model('sujet', SujetSchema);
