@@ -12,6 +12,6 @@ app.get('/topic/:id', TopicController.readOne);
 // creates a topic (from req.body)
 app.put('/topic', TopicController.create);
 
-// creates a message (from req.body) in the in a topic (identified by his _id)
+// creates a message (from req.body) in a topic (identified by his _id)
 app.post('/message/:topicID', MessageController.create);
 ```
