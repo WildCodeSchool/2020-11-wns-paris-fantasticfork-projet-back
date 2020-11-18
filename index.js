@@ -24,7 +24,7 @@ app.put('/subject', SubjectController.create);
 app.post('/message/:sujetID', MessageController.create);
 
 // db connect
-mongoose.connect("mongodb://localhost:27017/stud-connect", {
+mongoose.connect("mongodb+srv://fantastic:fork@stud-connect.zfeul.mongodb.net/stud-connect?retryWrites=true&w=majority", {
         useCreateIndex: true,
         autoIndex: true,
         useNewUrlParser: true,
