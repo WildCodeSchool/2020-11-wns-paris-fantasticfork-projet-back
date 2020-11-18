@@ -1,16 +1,24 @@
 const mongoose = require("mongoose");
-const TopicSchema = new mongoose.Schema({
-  username: String,
-  subject: String,
-  body: String,
-  date: Date,
-  url: [String],
-  tags: [String],
-  responses: [{
-      date: Date,
-      name: String,
-      message: String,
-  }]
+
+const CommentSchema = new mongoose.Schema({
+    author!: {
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'User'
+    },
+    comments: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Comment',
+      }
+    ],
+    tags: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Tags'
+      }
+    ],
+    body!: String,
+    urls: [String]
 });
 
-module.exports = mongoose.model('Topic', TopicSchema);
+module.exports = mongoose.Model('Topic', CommentSchema)
