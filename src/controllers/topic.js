@@ -1,4 +1,5 @@
 const TopicModel = require("../models/Topic");
+const UserModel = require("../models/User")
 
 module.exports = {
     /**
@@ -14,8 +15,9 @@ module.exports = {
 
         try {
             req.body.date = new Date(Date.now()) // sets date of topic
-            const user = new TopicModel(req.body);
-            const result = await user.save();
+
+            const topic = new TopicModel(req.body);
+            const result = await topic.save();
             res.json({ success: true, body: result }); 
         } 
         catch (error) {
@@ -38,7 +40,7 @@ module.exports = {
             .populate('tags')
             /* uncomment the line below to populate 'comments' in the response */
             // .populate('comments')
-            
+
             res.json({ success: true, body: result });
         } 
         catch (error) {
