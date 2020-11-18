@@ -33,7 +33,12 @@ module.exports = {
      */
     read: async (req, res) => {
         try {
-            const result = await TopicModel.find({});
+            const result = await TopicModel.find({})
+            .populate('author')
+            .populate('tags')
+            /* uncomment the line below to populate 'comments' in the response */
+            // .populate('comments')
+            
             res.json({ success: true, body: result });
         } 
         catch (error) {
@@ -54,7 +59,11 @@ module.exports = {
         await TopicModel.init(); // ?
 
         try {
-            const result = await TopicModel.findOne({ _id: req.params.id });
+            const result = await TopicModel.findOne({ _id: req.params.id })
+            .populate('author')
+            .populate('tags')
+            .populate('comments');
+
             res.json({ success: true, body: result });
         } 
         catch (error) {
