@@ -30,7 +30,7 @@ mongoose.connect("mongodb+srv://fantastic:fork@stud-connect.zfeul.mongodb.net/st
         useNewUrlParser: true,
         useUnifiedTopology: true
     })
-    .then(() => console.log("Connected to database !"))
+    .then(() => console.log("Connected to database !", new Date(Date.now()) ))
     .catch((err) => console.log("Not connected :", err));
 
 // app listen

@@ -13,6 +13,7 @@ module.exports = {
         await TopicModel.init(); // ?
 
         try {
+            req.body.date = new Date(Date.now()) // sets date of topic
             const user = new TopicModel(req.body);
             const result = await user.save();
             res.json({ success: true, body: result }); 

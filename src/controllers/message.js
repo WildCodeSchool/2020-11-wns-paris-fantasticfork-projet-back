@@ -14,6 +14,7 @@ module.exports = {
      */
     create: async (req, res) => {
         await TopicModel.init(); // ?
+        req.body.date = new Date(Date.now()) // sets message date
 
         try {
             let topic = await TopicModel.findOneAndUpdate(
