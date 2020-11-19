@@ -13,7 +13,7 @@ $ npm run start
 ```
 
 ## Routes 🛣
-### topic
+### *topic*
 **GET** ```/topics```
 * Retourne tous les *topics* avec leurs commentaires
 
@@ -25,7 +25,7 @@ $ npm run start
 * Crée un nouveau document *topic*
 * Les paramètres envoyés dans le *body* de la requête doivent suivre le [modèle de Topic](https://github.com/WildCodeSchool/2020-11-wns-paris-fantasticfork-projet-back/blob/api-v2/src/models/Topic.js) 
 
-### comment
+### *comment*
 **GET** ```/comments/:topicID```
 * Retourne les commentaires du topic dont l'id est indiqué par **:topicID**
 
@@ -33,7 +33,7 @@ $ npm run start
 * Crée un nouveau document *comment*
 * Les paramètres envoyés dans le *body* de la requête doivent suivre le [modèle de Comment](https://github.com/WildCodeSchool/2020-11-wns-paris-fantasticfork-projet-back/blob/api-v2/src/models/Comment.js)
 
-### user
+### *user*
 **POST** ```/user```
 * Crée un nouveau document *user*
 * Les paramètres envoyés dans le *body* de la requête doivent suivre le [modèle de User](https://github.com/WildCodeSchool/2020-11-wns-paris-fantasticfork-projet-back/blob/api-v2/src/models/Comment.js)
