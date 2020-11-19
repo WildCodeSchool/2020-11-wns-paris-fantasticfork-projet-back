@@ -15,9 +15,10 @@ module.exports = {
     create: async (req, res) => {
         await CommentModel.init(); // ?
         req.body.date = new Date(Date.now()) // sets message date
-        try {       
+        try {      
+            if (!req.query.userID || !req.query.topicID) throw new Error('user id or/and topic id are undefined')
             req.body.author = req.query.userID
-            req.body.topic = req.query.topicID 
+            req.body.topic = req.query.topicID
 
             let commentModel = new CommentModel( req.body )
             let comment = await commentModel.save()
