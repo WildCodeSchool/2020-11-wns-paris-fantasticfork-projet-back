@@ -36,4 +36,4 @@ $ npm run start
 ### *user*
 **POST** ```/user```
 * Crée un nouveau document *user*
-* Les paramètres envoyés dans le *body* de la requête doivent suivre le [modèle de User](https://github.com/WildCodeSchool/2020-11-wns-paris-fantasticfork-projet-back/blob/api-v2/src/models/Comment.js)
+* Les paramètres envoyés dans le *body* de la requête doivent suivre le [modèle de User](https://github.com/WildCodeSchool/2020-11-wns-paris-fantasticfork-projet-back/blob/api-v2/src/models/User.js)
