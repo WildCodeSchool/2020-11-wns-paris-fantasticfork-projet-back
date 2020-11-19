@@ -32,13 +32,13 @@ app.post('/user', UserController.create);
 
 // db connect
 mongoose.connect(process.env.DB_CONN_STRING, {
-        useCreateIndex: true,
-        autoIndex: true,
-        useNewUrlParser: true,
-        useUnifiedTopology: true
-    })
-    .then(() => console.log("Connected to database !", new Date(Date.now()) ))
-    .catch((err) => console.log("Not connected :", err));
+    useCreateIndex: true,
+    autoIndex: true,
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+})
+.then(() => console.log("Connected to database on ", new Date(Date.now()).toLocaleString('fr-FR') ))
+.catch((err) => console.log("Not connected to database : ", err));
 
 // app listen
-app.listen(process.env.APP_PORT, () => console.log("Server started on port 5000."))
+app.listen(process.env.APP_PORT, () => console.log(`Server runs on port :${process.env.APP_PORT} 🏃`))
