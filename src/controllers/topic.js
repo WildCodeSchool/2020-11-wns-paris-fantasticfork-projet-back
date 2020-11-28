@@ -79,7 +79,7 @@ module.exports = {
    */
   updateOne: async (req, res) => {
     try {
-      const result = await TopicModel.findByIdAndUpdate(req.params.id, { $set: req.body}, { new:true }) 
+      const result = await TopicModel.findByIdAndUpdate(req.params.id, { $set: req.body }, { new: true });
       //modify(merge) req.body and return updated data
       //mind req.body shouldn't have _id property
 
@@ -99,8 +99,8 @@ module.exports = {
    *
    */
   deleteOne: async (req, res) => {
-    try {     
-      const deleteTopic = await TopicModel.deleteOne({{ _id: req.params.id }})
+    try {
+      const deleteTopic = await TopicModel.deleteOne({ _id: req.params.id });
       const deleteComment = await CommentModel.deleteMany({ topicID: req.params.id });
 
       res.json({ success: true, body: deleteTopic, deleteComment });
