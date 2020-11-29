@@ -46,4 +46,4 @@ mongoose
   .catch((err) => console.log('Not connected to database : ', err));
 
 // app listen
-app.listen(process.env.APP_PORT, () => console.log(`Server runs on port :${process.env.APP_PORT} 🏃`));
+app.listen(process.env.PORT || 5000, () => console.log(`Server runs on port :${process.env.APP_PORT} 🏃`));
