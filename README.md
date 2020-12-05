@@ -23,7 +23,15 @@ $ npm run start
 
 **POST** ```/topic```
 * Crée un nouveau document *topic*
-* Les paramètres envoyés dans le *body* de la requête doivent suivre le [modèle de Topic](https://github.com/WildCodeSchool/2020-11-wns-paris-fantasticfork-projet-back/blob/api-v2/src/models/Topic.js) 
+* Les paramètres envoyés dans le *body* de la requête doivent suivre le [modèle de Topic](https://github.com/WildCodeSchool/2020-11-wns-paris-fantasticfork-projet-back/blob/api-v2/src/models/Topic.js)
+
+**PUT** ```/topic/:id```
+* Met à jour un *topic* dont l'id est indiqué dans le paramètre **:id**
+* Les nouvelles informations doivent être passés dans le body de la requête
+
+**DELETE** ```/topic/:id```
+* Supprime un *topic* dont l'id est indiqué dans le paramètre **:id**
+* Supprime tous les commentaires associés au *topic*
 
 ### *comment*
 **GET** ```/comments/:topicID```
