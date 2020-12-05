@@ -17,7 +17,7 @@ $ npm run start
 * Si la requête réussit, la réponse sera au format ```{ "success": true, "body": { data } }```
 * Si la requête échoue, la réponse sera au format ```{ "success": false, "error": { error } }```
 
-### *TOPICS* 📂
+### 📂 *TOPICS*
 **GET** ```/topics```
 * Retourne tous les *topics* avec leurs commentaires
 
@@ -37,7 +37,7 @@ $ npm run start
 * Supprime un *topic* dont l'id est indiqué dans le paramètre **:id**
 * Supprime tous les commentaires associés au *topic*
 
-### *COMMENTS* 💬
+### 💬 *COMMENTS*
 **GET** ```/comments/:topicID```
 * Retourne les commentaires du topic dont l'id est indiqué par **:topicID**
 
@@ -45,7 +45,7 @@ $ npm run start
 * Crée un nouveau document *comment*
 * Les paramètres envoyés dans le *body* de la requête doivent suivre le [modèle de Comment](https://github.com/WildCodeSchool/2020-11-wns-paris-fantasticfork-projet-back/blob/api-v2/src/models/Comment.js)
 
-### *user* 👤
+### 👤 *USER*
 **POST** ```/user```
 * Crée un nouveau document *user*
 * Les paramètres envoyés dans le *body* de la requête doivent suivre le [modèle de User](https://github.com/WildCodeSchool/2020-11-wns-paris-fantasticfork-projet-back/blob/api-v2/src/models/User.js)
