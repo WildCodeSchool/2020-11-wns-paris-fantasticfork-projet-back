@@ -13,6 +13,10 @@ $ npm run start
 ```
 
 ## Routes 🛣
+### Format des données de retour
+Si la requête réussit, la réponse sera au format ```{ "success": true, "body": { data } }```
+Si la requête échoue, la réponse sera au format ```{ "success": false, "error": { error } }```
+
 ### *topic*
 **GET** ```/topics```
 * Retourne tous les *topics* avec leurs commentaires
