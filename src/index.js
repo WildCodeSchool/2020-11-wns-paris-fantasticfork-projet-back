@@ -1,7 +1,7 @@
 // controllers
-const TopicController = require('./src/controllers/topic.js');
-const CommentController = require('./src/controllers/comment.js');
-const UserController = require('./src/controllers/user.js');
+const TopicController = require('./controllers/topic.js');
+const CommentController = require('./controllers/comment.js');
+const UserController = require('./controllers/user.js');
 
 // dependencies
 const express = require('express');
@@ -42,8 +42,15 @@ mongoose
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
-  .then(() => console.log('Connected to database on ', new Date(Date.now()).toLocaleString('fr-FR')))
+  .then(() =>
+    console.log(
+      'Connected to database on ',
+      new Date(Date.now()).toLocaleString('fr-FR')
+    )
+  )
   .catch((err) => console.log('Not connected to database : ', err));
 
 // app listen
-app.listen(process.env.PORT || 5000, () => console.log(`Server runs on port :${process.env.APP_PORT} 🏃`));
+app.listen(process.env.PORT || 5000, () =>
+  console.log(`Server runs on port :${process.env.APP_PORT} 🏃`)
+);
