@@ -16,9 +16,9 @@ module.exports = {
       req.body.date = new Date(Date.now()); // sets date of topic
       const user = new TopicModel(req.body);
       const result = await user.save();
-      res.json({ success: true, body: result });
+      res.status(201).json({ success: true, result });
     } catch (error) {
-      console.log('err: ', error);
+      // console.log('err: ', error);
       res.json({ success: false, error });
     }
   },
@@ -33,7 +33,7 @@ module.exports = {
   read: async (req, res) => {
     try {
       const result = await TopicModel.find({});
-      res.json({ success: true, body: result });
+      res.status(200).json({ success: true, result });
     } catch (error) {
       console.log('err: ', error);
       res.json({ success: false, error });
@@ -53,7 +53,7 @@ module.exports = {
 
     try {
       const result = await TopicModel.findOne({ _id: req.params.id });
-      res.json({ success: true, body: result });
+      res.status(200).json({ success: true, result });
     } catch (error) {
       console.log('err: ', error);
       res.json({ success: false, error });
