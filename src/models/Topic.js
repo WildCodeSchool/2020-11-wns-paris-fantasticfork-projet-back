@@ -1,4 +1,5 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
+
 const TopicSchema = new mongoose.Schema({
   username: String,
   subject: String,
@@ -6,11 +7,13 @@ const TopicSchema = new mongoose.Schema({
   date: Date,
   url: [String],
   tags: [String],
-  responses: [{
+  responses: [
+    {
       date: Date,
       name: String,
       message: String,
-  }]
+    },
+  ],
 });
 
 module.exports = mongoose.model('Topic', TopicSchema);
