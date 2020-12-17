@@ -1,7 +1,7 @@
+export {}
 const express = require('express');
 const cors = require('cors');
-const mongoose = require('mongoose');
-const route = require('./routes');
+const route = require('./routes/index');
 
 // init app
 const app = express();

@@ -1,3 +1,4 @@
+import { Request, Response } from 'express'
 const UserModel = require('../models/User')
 
 module.exports = {
@@ -9,7 +10,7 @@ module.exports = {
      * @param {Object} res - Un objet reponse d'express
      * 
      */
-    create: async (req, res) => {
+    create: async (req: Request, res: Response) => {
         try {
             req.body.created_at = new Date(Date.now())
             await UserModel.init() // ?

@@ -1,10 +1,27 @@
-import { ApolloServer } from 'apollo-server-express';
-import { buildSchema } from 'type-graphql';
+export {}; // fixes "Cannot redeclare block-scoped variable"
+const mongoose = require('mongoose');
+const app = require('./app');
 
-export async function getApolloServer(): Promise<ApolloServer> {
-  const schema = await buildSchema({
-    resolvers: [],
-  });
-  const server = new ApolloServer({ schema });
-  return server;
-}
+const start = async () => {
+  try {
+    // Database
+    mongoose.connect('mongodb+srv://fantastic:fork@stud-connect.zfeul.mongodb.net/stud-connect?retryWrites=true&w=majority', {
+      useCreateIndex: true,
+      autoIndex: true,
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+
+    // eslint-disable-next-line no-console
+    console.log('Connected to database !', new Date(Date.now()));
+
+    // eslint-disable-next-line no-console
+    app.listen(5000, () => console.log('Server started on 5000'));
+  } catch (err) {
+    // eslint-disable-next-line no-console
+    console.error(err);
+  }
+};
+
+// Start Server
+start();

@@ -1,3 +1,6 @@
+export {}
+import { Request, Response } from 'express'
+
 const mongoose = require('mongoose');
 const express = require('express');
 const router = express.Router();
@@ -7,7 +10,7 @@ const TopicController = require('../controllers/topic.js');
 const CommentController = require('../controllers/comment.js');
 
 // routes
-router.get('/', (req, res) => {
+router.get('/', (req: Request, res: Response) => {
   res.send('Connected!');
 });
 router.get('/topics', TopicController.read);

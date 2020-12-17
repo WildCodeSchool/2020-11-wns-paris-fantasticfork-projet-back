@@ -1,3 +1,4 @@
+export {}
 const mongoose = require("mongoose");
 
 const CommentSchema = new mongoose.Schema({
@@ -21,4 +22,4 @@ const CommentSchema = new mongoose.Schema({
     }
 });
 
-module.exports = mongoose.model('Comment', CommentSchema);
+module.exports.defalut = mongoose.model('Comment', CommentSchema);

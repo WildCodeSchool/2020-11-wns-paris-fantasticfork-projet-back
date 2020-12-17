@@ -1,3 +1,4 @@
+import { Request, Response } from 'express'
 // model
 const CommentModel = require("../models/Comment");
 
@@ -12,7 +13,7 @@ module.exports = {
      * @param {Object} res - Un objet reponse d'express
      * 
      */
-    create: async (req, res) => {
+    create: async (req: Request, res: Response) => {
         await CommentModel.init(); // ?
         req.body.date = new Date(Date.now()) // sets message date
 
@@ -36,7 +37,7 @@ module.exports = {
      * @param {Object} res - Un objet reponse d'express
      * 
      */
-    readCommentsByTopic: async (req, res) => {
+    readCommentsByTopic: async (req: Request, res: Response) => {
         await CommentModel.init(); // ?
         try {
             let result = await CommentModel.find({ topic: req.params.topicID })

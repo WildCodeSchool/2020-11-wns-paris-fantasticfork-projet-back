@@ -1,3 +1,5 @@
+export {}
+import { Request, Response } from 'express'
 const TopicModel = require('../models/Topic');
 const UserModel = require('../models/User');
 const CommentModel = require('../models/Comment');
@@ -11,7 +13,7 @@ module.exports = {
    * @param {Object} res - Un objet reponse d'express
    *
    */
-  create: async (req, res) => {
+  create: async (req: Request, res: Response) => {
     await TopicModel.init(); // ?
     // it builds indexes when auto-index is off, mongoose call it automatically when using mongoose model(here => 'TopicModel')
     // We don't need to call it unless we need to call to get back a promise :)
@@ -33,7 +35,7 @@ module.exports = {
    * @param {Object} res - Un objet reponse d'express
    *
    */
-  read: async (req, res) => {
+  read: async (req: Request, res: Response) => {
     try {
       const topics = await TopicModel.find({})
         .populate('author')
@@ -56,7 +58,7 @@ module.exports = {
    * @param {Object} res - Un objet reponse d'express
    *
    */
-  readOne: async (req, res) => {
+  readOne: async (req: Request, res: Response) => {
     await TopicModel.init(); // ?
 
     try {
@@ -84,7 +86,7 @@ module.exports = {
    * @param {Object} res - Un objet reponse d'express
    *
    */
-  updateOne: async (req, res) => {
+  updateOne: async (req: Request, res: Response) => {
     try {
       const result = await TopicModel.findByIdAndUpdate(
         req.params.id,
@@ -109,7 +111,7 @@ module.exports = {
    * @param {Object} res - Un objet reponse d'express
    *
    */
-  deleteOne: async (req, res) => {
+  deleteOne: async (req: Request, res: Response) => {
     try {
       const deleteTopic = await TopicModel.deleteOne({ _id: req.params.id });
       const deleteComment = await CommentModel.deleteMany({
@@ -134,9 +136,9 @@ module.exports = {
  * @returns {Array} - Un tableau de topics avec leurs commentaires
  *
  */
-function nestCommentsInTopics(topics, comments) {
-  let nestedArrays = [];
-  topics.forEach((topic) => {
+function nestCommentsInTopics(topics: [Topic], comments: [Comment]) {
+  let nestedArrays = [] as any;
+  topics.forEach((topic: Topic) => {
     comments.forEach((comment) => {
       if (topic._id.equals(comment.topicID)) {
         topic.comments.push(comment);
@@ -145,4 +147,12 @@ function nestCommentsInTopics(topics, comments) {
     nestedArrays.push(topic);
   });
   return nestedArrays;
+}
+
+interface Topic {
+    [key: string]: any;
+}
+
+interface Comment {
+    [key: string]: any;
 }
