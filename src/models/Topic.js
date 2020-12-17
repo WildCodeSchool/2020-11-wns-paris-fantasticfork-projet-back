@@ -1,10 +1,22 @@
 const mongoose = require('mongoose');
 
 const TopicSchema = new mongoose.Schema({
-  username: String,
-  subject: String,
-  body: String,
-  date: Date,
+  username: {
+    type: String,
+    required: true,
+  },
+  subject: {
+    type: String,
+    required: true,
+  },
+  body: {
+    type: String,
+    required: true,
+  },
+  date: {
+    type: Date,
+    required: true,
+  },
   url: [String],
   tags: [String],
   responses: [

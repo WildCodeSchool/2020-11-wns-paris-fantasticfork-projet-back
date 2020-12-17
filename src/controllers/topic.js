@@ -19,7 +19,7 @@ module.exports = {
       res.status(201).json({ success: true, result });
     } catch (error) {
       // console.log('err: ', error);
-      res.json({ success: false, error });
+      res.status(400).json({ success: false, error });
     }
   },
 
@@ -35,7 +35,6 @@ module.exports = {
       const result = await TopicModel.find({});
       res.status(200).json({ success: true, result });
     } catch (error) {
-      console.log('err: ', error);
       res.json({ success: false, error });
     }
   },
