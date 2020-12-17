@@ -3,6 +3,9 @@ const TopicController = require('./controllers/topic.js');
 const CommentController = require('./controllers/comment.js');
 const UserController = require('./controllers/user.js');
 
+//models
+const userModel = require('./models/User')
+
 // dependencies
 const express = require('express');
 const mongoose = require('mongoose');
@@ -10,8 +13,40 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 dotenv.config();
 
+// graphql
+const { buildSchema, getIntrospectionQuery } = require('graphql');
+const { graphqlHTTP } = require('express-graphql');
+
+const schema = buildSchema(`
+    type Query {
+        users: [User]
+    },
+    type User {
+        id: String
+        name: String
+        created_at: String
+    }
+`);
+
+async function getUsers() {
+    let users = await userModel.find({})
+    return users;
+}
+
+const root = {
+  users: getUsers
+}
+
+
 // init app
 const app = express();
+
+//gql
+app.use('/graphql', graphqlHTTP({
+  schema,
+  rootValue: root,
+  graphiql: true
+}))
 
 // middlewares
 app.use(express.json());
