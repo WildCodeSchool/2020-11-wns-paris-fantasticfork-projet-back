@@ -20,10 +20,9 @@ module.exports = {
       req.body.date = new Date(Date.now()); // sets date of topic
       const topic = new TopicModel(req.body);
       const result = await topic.save();
-      res.json({ success: true, body: result });
+      res.status(201).json({ success: true, result });
     } catch (error) {
-      console.log('err: ', error);
-      res.json({ success: false, error });
+      res.status(400).json({ success: false, error });
     }
   },
 
@@ -36,11 +35,13 @@ module.exports = {
    */
   read: async (req, res) => {
     try {
-      const topics = await TopicModel.find({}).populate('author').populate('tags');
+      const topics = await TopicModel.find({})
+        .populate('author')
+        .populate('tags');
       const comments = await CommentModel.find({}).populate('author');
       let topicsWithComments = nestCommentsInTopics(topics, comments);
 
-      res.json({ success: true, body: topicsWithComments });
+      res.status(200).json({ success: true, topicsWithComments });
     } catch (error) {
       console.log('err: ', error);
       res.json({ success: false, error });
@@ -56,12 +57,18 @@ module.exports = {
    *
    */
   readOne: async (req, res) => {
+    await TopicModel.init(); // ?
+
     try {
-      const topics = await TopicModel.find({ _id: req.params.id }).populate('author').populate('tags');
-      const comments = await CommentModel.find({ topicID: req.params.id }).populate('author');
+      const topics = await TopicModel.find({ _id: req.params.id })
+        .populate('author')
+        .populate('tags');
+      const comments = await CommentModel.find({
+        topicID: req.params.id,
+      }).populate('author');
       const topicsWithComments = nestCommentsInTopics(topics, comments);
 
-      res.json({ success: true, body: topicsWithComments });
+      res.status(200).json({ success: true, topicsWithComments });
     } catch (error) {
       console.log('err: ', error);
       res.json({ success: false, error });
@@ -79,7 +86,11 @@ module.exports = {
    */
   updateOne: async (req, res) => {
     try {
-      const result = await TopicModel.findByIdAndUpdate(req.params.id, { $set: req.body }, { new: true });
+      const result = await TopicModel.findByIdAndUpdate(
+        req.params.id,
+        { $set: req.body },
+        { new: true }
+      );
       //modify(merge) req.body and return updated data
       //mind req.body shouldn't have _id property
 
@@ -101,7 +112,9 @@ module.exports = {
   deleteOne: async (req, res) => {
     try {
       const deleteTopic = await TopicModel.deleteOne({ _id: req.params.id });
-      const deleteComment = await CommentModel.deleteMany({ topicID: req.params.id });
+      const deleteComment = await CommentModel.deleteMany({
+        topicID: req.params.id,
+      });
 
       res.json({ success: true, body: deleteTopic, deleteComment });
     } catch (error) {

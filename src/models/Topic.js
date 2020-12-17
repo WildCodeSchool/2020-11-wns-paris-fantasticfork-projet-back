@@ -1,38 +1,31 @@
-const mongoose = require("mongoose");
-
-// require needed models
-require('../models/User')
-require('../models/Comment')
-require('../models/Tag')
+const mongoose = require('mongoose');
 
 const TopicSchema = new mongoose.Schema({
-    author: {
-        type: mongoose.Schema.Types.ObjectId, 
-        ref: 'User',
-        required: true
+  username: {
+    type: String,
+    required: true,
+  },
+  subject: {
+    type: String,
+    required: true,
+  },
+  body: {
+    type: String,
+    required: true,
+  },
+  date: {
+    type: Date,
+    required: true,
+  },
+  url: [String],
+  tags: [String],
+  responses: [
+    {
+      date: Date,
+      name: String,
+      message: String,
     },
-    comments: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Comment',
-      }
-    ],
-    tags: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Tag'
-      }
-    ],
-    body: {
-      type: String,
-      required: true
-    },
-    title: {
-      type: String,
-      required: true
-    },
-    urls: [String]
-
+  ],
 });
 
-module.exports = mongoose.model('Topics-v2', TopicSchema)
+module.exports = mongoose.model('Topic', TopicSchema);
