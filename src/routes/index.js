@@ -4,7 +4,7 @@ const router = express.Router();
 
 // controllers
 const TopicController = require('../controllers/topic.js');
-const MessageController = require('../controllers/message.js');
+const CommentController = require('../controllers/comment.js');
 
 // routes
 router.get('/', (req, res) => {
@@ -13,6 +13,6 @@ router.get('/', (req, res) => {
 router.get('/topics', TopicController.read);
 router.get('/topic/:id', TopicController.readOne);
 router.post('/topic', TopicController.create);
-router.post('/message/:topicID', MessageController.create);
+router.post('/message/:topicID', CommentController.create);
 
 module.exports = router;
