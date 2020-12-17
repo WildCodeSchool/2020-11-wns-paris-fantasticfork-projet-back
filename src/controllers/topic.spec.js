@@ -26,7 +26,6 @@ describe('Create / Read a topic', () => {
     });
 
     it('Should return error when failed', async () => {
-      //here to code
       let response = await request(app).post('/topic').send(invalideTopic).expect(400);
       expect(response.body.success).toEqual(false);
     });
