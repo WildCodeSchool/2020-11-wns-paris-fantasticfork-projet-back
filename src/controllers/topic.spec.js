@@ -12,7 +12,12 @@ const newTopic = {
   url: ['www.test.com', 'www.test2.com'],
   tags: ['nodejs', 'js', 'graphql'],
 };
-const invalideTopic = {};
+const invalideTopic = {
+  subject: 'HELP ! Ce problème me rend fou 🤯',
+  body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+  url: ['www.test.com', 'www.test2.com'],
+  tags: ['nodejs', 'js', 'graphql'],
+};
 
 describe('Create / Read a topic', () => {
   beforeAll(async () => await dbHandler.connect());
@@ -37,7 +42,7 @@ describe('Create / Read a topic', () => {
       expect(getWithoutId.body.success).toEqual(false);
     });
 
-    it('Should return a empty result when id does not match', async () => {
+    it('Should return a empty result when id does not exist', async () => {
       const getWithoutId = await request(app).get('/topic/5fb4f8b489ff8dccc8b36728');
       expect(getWithoutId.body.result).toEqual(null);
     });
