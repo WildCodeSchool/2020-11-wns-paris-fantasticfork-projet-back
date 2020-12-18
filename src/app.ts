@@ -1,4 +1,4 @@
-export {}
+export {};
 const express = require('express');
 const cors = require('cors');
 const route = require('./routes/index');
@@ -19,7 +19,7 @@ app.use(route);
 
 //GRAPHQL
 //schemas
-var schema = buildSchema(`
+const schema = buildSchema(`
     type Query {
         topics: [Topic]
         topic(_id: ID): Topic
@@ -44,40 +44,40 @@ var schema = buildSchema(`
 `);
 
 //resolvers
-const TopicModel = require('./models/Topic')
-const CommentModel = require('./models/Comment')
+const TopicModel = require('./models/Topic');
+const CommentModel = require('./models/Comment');
 
-const getTopics = async function() {
-    try {
-        const topics = await TopicModel.find({})
-        return topics;
-    }
+const getTopics = async function () {
+  try {
+    const topics = await TopicModel.find({});
+    return topics;
+  } catch (error) {
+    console.log('err: ', error);
+    return error;
+  }
+};
 
-    catch (error) {
-        console.log('err: ', error);
-        return error
-    }
-}
-
-const getOneTopic = async function (args : Args) {
-    const topic = await TopicModel.findById(args._id);
-    return topic;
-}
+const getOneTopic = async function (args: Args) {
+  const topic = await TopicModel.findById(args._id);
+  return topic;
+};
 
 interface Args {
-    _id: String,
+  _id: string;
 }
 
 const root = {
-    topics: getTopics,
-    topic: getOneTopic
+  topics: getTopics,
+  topic: getOneTopic,
 };
 
-app.use('/graphql', graphqlHTTP({
+app.use(
+  '/graphql',
+  graphqlHTTP({
     schema: schema,
     rootValue: root,
-    graphiql: true
-}));
+    graphiql: true,
+  })
+);
 
-
-module.exports = app;
+export default app;

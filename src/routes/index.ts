@@ -1,13 +1,9 @@
-export {}
-import { Request, Response } from 'express'
-
-const mongoose = require('mongoose');
-const express = require('express');
-const router = express.Router();
-
+import express, { Request, Response } from 'express';
 // controllers
-const TopicController = require('../controllers/topic.js');
-const CommentController = require('../controllers/comment.js');
+import TopicController from '../controllers/topic.js';
+import CommentController from '../controllers/comment.js';
+
+const router = express.Router();
 
 // routes
 router.get('/', (req: Request, res: Response) => {

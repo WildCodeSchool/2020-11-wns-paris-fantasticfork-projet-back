@@ -4,7 +4,7 @@ const TopicModel = require('../models/Topic');
 const UserModel = require('../models/User');
 const CommentModel = require('../models/Comment');
 
-module.exports = {
+export default class TopicController {
   /**
    * Crée un document "topic" et renvoi le document si il a bien été créé
    *
@@ -13,7 +13,7 @@ module.exports = {
    * @param {Object} res - Un objet reponse d'express
    *
    */
-  create: async (req: Request, res: Response) => {
+  create = async (req: Request, res: Response) => {
     await TopicModel.init(); // ?
     // it builds indexes when auto-index is off, mongoose call it automatically when using mongoose model(here => 'TopicModel')
     // We don't need to call it unless we need to call to get back a promise :)
@@ -26,7 +26,7 @@ module.exports = {
     } catch (error) {
       res.status(400).json({ success: false, error });
     }
-  },
+  }
 
   /**
    * Renvoie tous les topics
@@ -35,7 +35,7 @@ module.exports = {
    * @param {Object} res - Un objet reponse d'express
    *
    */
-  read: async (req: Request, res: Response) => {
+  read = async (req: Request, res: Response) => {
     try {
       const topics = await TopicModel.find({})
         .populate('author')
@@ -48,7 +48,7 @@ module.exports = {
       console.log('err: ', error);
       res.json({ success: false, error });
     }
-  },
+  }
 
   /**
    * Renvoie un topic en fonction de l'id passé en paramètres
@@ -58,7 +58,7 @@ module.exports = {
    * @param {Object} res - Un objet reponse d'express
    *
    */
-  readOne: async (req: Request, res: Response) => {
+  readOne = async (req: Request, res: Response) => {
     await TopicModel.init(); // ?
 
     try {
@@ -75,7 +75,7 @@ module.exports = {
       console.log('err: ', error);
       res.json({ success: false, error });
     }
-  },
+  }
 
   /**
    * Modifie un topic en fonction de l'id passé en paramètres
@@ -86,7 +86,7 @@ module.exports = {
    * @param {Object} res - Un objet reponse d'express
    *
    */
-  updateOne: async (req: Request, res: Response) => {
+  updateOne = async (req: Request, res: Response) => {
     try {
       const result = await TopicModel.findByIdAndUpdate(
         req.params.id,
@@ -101,7 +101,7 @@ module.exports = {
       console.log('err: ', error);
       res.json({ success: false, error });
     }
-  },
+  }
 
   /**
    * Supprime un topic en fonction de l'id passé en paramètres
@@ -111,7 +111,7 @@ module.exports = {
    * @param {Object} res - Un objet reponse d'express
    *
    */
-  deleteOne: async (req: Request, res: Response) => {
+  deleteOne = async (req: Request, res: Response) => {
     try {
       const deleteTopic = await TopicModel.deleteOne({ _id: req.params.id });
       const deleteComment = await CommentModel.deleteMany({
@@ -123,7 +123,6 @@ module.exports = {
       console.log('err: ', error);
       res.json({ success: false, error });
     }
-  },
 };
 
 /**
@@ -136,7 +135,7 @@ module.exports = {
  * @returns {Array} - Un tableau de topics avec leurs commentaires
  *
  */
-function nestCommentsInTopics(topics: [Topic], comments: [Comment]) {
+const nestCommentsInTopics = (topics: [Topic], comments: [Comment]) => {
   let nestedArrays = [] as any;
   topics.forEach((topic: Topic) => {
     comments.forEach((comment) => {
