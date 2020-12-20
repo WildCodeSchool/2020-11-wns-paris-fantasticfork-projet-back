@@ -14,4 +14,4 @@ router.get('/topic/:id', TopicController.readOne);
 router.post('/topic', TopicController.create);
 router.post('/message/:topicID', CommentController.create);
 
-module.exports = router;
+export default router;

@@ -1,7 +1,6 @@
-export {}
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
-const TopicSchema = new mongoose.Schema({
+const TopicModel = new mongoose.Schema({
   username: {
     type: String,
     required: true,
@@ -29,4 +28,4 @@ const TopicSchema = new mongoose.Schema({
   ],
 });
 
-module.exports = mongoose.model('Topic', TopicSchema);
+export default mongoose.model('Topic', TopicModel);

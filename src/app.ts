@@ -1,10 +1,11 @@
-export {};
-const express = require('express');
-const cors = require('cors');
-const route = require('./routes/index');
+import express from 'express';
+import cors from 'cors';
+import router from './routes';
 
-const { graphqlHTTP } = require('express-graphql');
-const { buildSchema } = require('graphql');
+import { graphqlHTTP } from 'express-graphql';
+import { buildSchema } from 'graphql';
+
+import TopicModel from './models/Topic';
 
 // init app
 const app = express();
@@ -15,7 +16,7 @@ app.use(express.json());
 app.use(cors());
 
 // Routes
-app.use(route);
+app.use(router);
 
 //GRAPHQL
 //schemas
@@ -44,8 +45,6 @@ const schema = buildSchema(`
 `);
 
 //resolvers
-const TopicModel = require('./models/Topic');
-const CommentModel = require('./models/Comment');
 
 const getTopics = async function () {
   try {

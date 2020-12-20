@@ -31,7 +31,10 @@ describe('Create / Read a topic', () => {
     });
 
     it('Should return error when failed', async () => {
-      let response = await request(app).post('/topic').send(invalideTopic).expect(400);
+      let response = await request(app)
+        .post('/topic')
+        .send(invalideTopic)
+        .expect(400);
       expect(response.body.success).toEqual(false);
     });
   });
@@ -43,7 +46,9 @@ describe('Create / Read a topic', () => {
     });
 
     it('Should return a empty result when id does not exist', async () => {
-      const getWithoutId = await request(app).get('/topic/5fb4f8b489ff8dccc8b36728');
+      const getWithoutId = await request(app).get(
+        '/topic/5fb4f8b489ff8dccc8b36728'
+      );
       expect(getWithoutId.body.result).toEqual(null);
     });
 

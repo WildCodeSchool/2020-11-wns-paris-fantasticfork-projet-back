@@ -1,4 +1,3 @@
-export {}; // fixes "Cannot redeclare block-scoped variable"
 import mongoose from 'mongoose';
 import app from './app';
 
