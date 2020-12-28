@@ -1,29 +1,25 @@
-import mongoose from 'mongoose';
-import app from './app';
+import express from 'express';
+import { ApolloServer } from 'apollo-server-express';
+import 'dotenv/config';
+import mongooseConnect from './config/mongodb';
 
-const start = async () => {
-  try {
-    // Database
-    mongoose.connect(
-      'mongodb+srv://fantastic:fork@stud-connect.zfeul.mongodb.net/stud-connect?retryWrites=true&w=majority',
-      {
-        useCreateIndex: true,
-        autoIndex: true,
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-      }
-    );
-
-    // eslint-disable-next-line no-console
-    console.log('Connected to database !', new Date(Date.now()));
-
-    // eslint-disable-next-line no-console
-    app.listen(5000, () => console.log('Server started on 5000'));
-  } catch (err) {
-    // eslint-disable-next-line no-console
-    console.error(err);
-  }
-};
+// we don't have these yet, but don't worry we'll get there.
+import typeDefs from './typeDefs';
+import resolvers from './resolvers';
 
 // Start Server
-start();
+mongooseConnect();
+
+// Apollo server
+const server = new ApolloServer({
+  typeDefs,
+  resolvers,
+});
+
+// init app
+const app = express();
+server.applyMiddleware({ app });
+
+// eslint-disable-next-line no-console
+const port = process.env.PORT || 4000;
+app.listen(port, () => console.log(`Server started on ${port}`));

@@ -2,10 +2,10 @@ import mongoose from 'mongoose';
 
 const UserSchema = new mongoose.Schema({
   name: {
-    type: String,
+    type: mongoose.SchemaTypes.String,
     required: true,
   },
-  created_at: Date,
+  created_at: mongoose.SchemaTypes.Date,
 });
 
 export default mongoose.model('User', UserSchema);

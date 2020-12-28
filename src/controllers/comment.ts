@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 // model
 import CommentModel from '../models/Comment';
 
-const CommentController = {};
+const CommentController: Record<string, unknown> = {};
 
 /**
  * Update un document "sujet" en ajoutant un message au tableau "reponses"

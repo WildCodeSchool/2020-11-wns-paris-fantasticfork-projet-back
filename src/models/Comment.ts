@@ -1,7 +1,14 @@
 import mongoose from 'mongoose';
 
+export interface IComment extends mongoose.Document {
+  authorId: string;
+  topicID: string;
+  date: Date;
+  body: string;
+}
+
 const CommentModel = new mongoose.Schema({
-  author: {
+  authorId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true,
@@ -12,13 +19,13 @@ const CommentModel = new mongoose.Schema({
     required: true,
   },
   date: {
-    type: Date,
+    type: mongoose.SchemaTypes.Date,
     required: true,
   },
   body: {
-    type: String,
+    type: mongoose.SchemaTypes.String,
     required: true,
   },
 });
 
-export default mongoose.model('Comment', CommentModel);
+export default mongoose.model<IComment>('Comment', CommentModel);

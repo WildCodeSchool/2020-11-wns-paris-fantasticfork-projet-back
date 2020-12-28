@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import UserModel from '../models/User';
 
-const UserController = {};
+const UserController: Record<string, unknown> = {};
 /**
  * Crée un document "user" et renvoi le document si il a bien été créé
  *

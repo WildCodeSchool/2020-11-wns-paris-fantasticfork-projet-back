@@ -2,7 +2,7 @@
   "name": "stud-connect-back",
   "version": "1.0.0",
   "description": "",
-  "main": "src/server.js",
+  "main": "dist/server.js",
   "scripts": {
     "lint": "eslint src/**/* --fix",
     "test": "jest",
@@ -14,11 +14,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@apollo/react-testing": "^4.0.0",
     "apollo-server-express": "^2.19.0",
-    "apollo-server-testing": "^2.19.0",
     "class-validator": "^0.12.2",
-    "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "express-graphql": "^0.12.0",

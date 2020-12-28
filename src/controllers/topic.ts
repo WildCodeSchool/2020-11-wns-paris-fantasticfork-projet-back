@@ -1,8 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Request, Response } from 'express';
 import TopicModel from '../models/Topic';
 import CommentModel from '../models/Comment';
 
-const TopicController = {};
+const TopicController: Record<string, unknown> = {};
 
 /**
  * Crée un document "topic" et renvoi le document si il a bien été créé
@@ -40,9 +41,8 @@ TopicController.read = async (req: Request, res: Response) => {
       .populate('author')
       .populate('tags');
     const comments = await CommentModel.find({}).populate('author');
-    const topicsWithComments = nestCommentsInTopics(topics, comments);
 
-    res.status(200).json({ success: true, topicsWithComments });
+    res.status(200).json({ success: true, topics, comments });
   } catch (error) {
     console.log('err: ', error);
     res.json({ success: false, error });
@@ -67,9 +67,9 @@ TopicController.readOne = async (req: Request, res: Response) => {
     const comments = await CommentModel.find({
       topicID: req.params.id,
     }).populate('author');
-    const topicsWithComments = nestCommentsInTopics(topics, comments);
+    // const topicsWithComments = nestCommentsInTopics(topics, comments);
 
-    res.status(200).json({ success: true, topicsWithComments });
+    res.status(200).json({ success: true, topics, comments });
   } catch (error) {
     console.log('err: ', error);
     res.json({ success: false, error });
@@ -136,23 +136,26 @@ export default TopicController;
  * @returns {Array} - Un tableau de topics avec leurs commentaires
  *
  */
-const nestCommentsInTopics = (topics: [Topic], comments: [Comment]) => {
-  const nestedArrays = [] as any;
-  topics.forEach((topic: Topic) => {
-    comments.forEach((comment) => {
-      if (topic._id.equals(comment.topicID)) {
-        topic.comments.push(comment);
-      }
-    });
-    nestedArrays.push(topic);
-  });
-  return nestedArrays;
-};
+// const nestCommentsInTopics = (
+//   topics: typeof TopicModel,
+//   comments: typeof CommentModel
+// ) => {
+//   const nestedArrays = [] as any;
+//   topics.forEach((topic: typeof TopicModel) => {
+//     comments.forEach((comment) => {
+//       if (topic._id.equals(comment.topicID)) {
+//         topic.comments.push(comment);
+//       }
+//     });
+//     nestedArrays.push(topic);
+//   });
+//   return nestedArrays;
+// };
 
-interface Topic {
-  [key: string]: any;
-}
+// interface Topic {
+//   [key: string]: any;
+// }
 
-interface Comment {
-  [key: string]: any;
-}
+// interface Comment {
+//   [key: string]: any;
+// }

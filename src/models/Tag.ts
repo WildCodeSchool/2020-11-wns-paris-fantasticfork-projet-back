@@ -2,10 +2,10 @@ import mongoose from 'mongoose';
 
 const TagModel = new mongoose.Schema({
   title: {
-    type: String,
+    type: mongoose.SchemaTypes.String,
     required: true,
   },
-  description: String,
+  description: mongoose.SchemaTypes.String,
 });
 
 export default mongoose.model('Tag', TagModel);
