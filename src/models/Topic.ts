@@ -7,7 +7,7 @@ export interface ITopic extends mongoose.Document {
   date: Date;
   url: [string];
   tags: [string];
-  responses: [IComment];
+  comments: IComment[];
 }
 
 const TopicModel = new mongoose.Schema({
@@ -29,11 +29,11 @@ const TopicModel = new mongoose.Schema({
   },
   url: [mongoose.SchemaTypes.String],
   tags: [mongoose.SchemaTypes.String],
-  responses: [
+  comments: [
     {
       date: mongoose.SchemaTypes.Date,
-      name: mongoose.SchemaTypes.String,
-      message: mongoose.SchemaTypes.String,
+      author: mongoose.SchemaTypes.String,
+      commentBody: mongoose.SchemaTypes.String,
     },
   ],
 });

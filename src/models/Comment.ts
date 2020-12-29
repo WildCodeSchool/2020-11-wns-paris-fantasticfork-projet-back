@@ -1,29 +1,35 @@
 import mongoose from 'mongoose';
 
 export interface IComment extends mongoose.Document {
-  authorId: string;
-  topicID: string;
+  // authorId: string;
+  topicId: string;
+  author: string;
+  commentBody: string;
   date: Date;
-  body: string;
 }
 
 const CommentModel = new mongoose.Schema({
-  authorId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true,
-  },
-  topicID: {
+  // authorId: {
+  //   type: mongoose.Schema.Types.ObjectId,
+  //   ref: 'User',
+  //   required: true,
+  // },
+  topicId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Topic',
     required: true,
   },
-  date: {
-    type: mongoose.SchemaTypes.Date,
+  author: {
+    type: mongoose.SchemaTypes.String,
     required: true,
   },
-  body: {
+  commentBody: {
     type: mongoose.SchemaTypes.String,
+    required: true,
+  },
+
+  date: {
+    type: mongoose.SchemaTypes.Date,
     required: true,
   },
 });

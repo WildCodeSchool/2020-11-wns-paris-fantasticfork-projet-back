@@ -1,8 +1,10 @@
-import topicQueries from './topics/topicQueries';
+import { topicQueries, topicMutation } from './forum/topic';
 
 export default {
   Query: {
     ...topicQueries,
   },
-  Mutation: {},
+  Mutation: {
+    ...topicMutation,
+  },
 };
