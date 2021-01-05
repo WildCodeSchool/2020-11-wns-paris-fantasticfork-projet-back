@@ -47,6 +47,7 @@ export const topicMutation = {
     const topic = new TopicModel(newTopic);
     return await topic.save();
   },
+
   // updateTopic
   updateTopic: async (
     _: unknown,
@@ -59,7 +60,12 @@ export const topicMutation = {
     );
     return topic;
   },
+
   // deleteTopic
+  deleteTopic: async (_: unknown, topicId: string): Promise<ITopic | null> => {
+    const topic = TopicModel.findOneAndDelete({ _id: topicId });
+    return topic;
+  },
 
   createComment: async (
     _: unknown,
