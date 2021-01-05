@@ -31,7 +31,7 @@ export default gql`
       body: String!
       url: [String]
       tags: [String]
-    ): [Topic]
+    ): Topic
 
     updateTopic(
       _id: ID!

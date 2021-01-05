@@ -40,9 +40,9 @@ export const topicMutation = {
       username,
       subject,
       body,
+      date,
       url,
       tags,
-      date,
     };
     const topic = new TopicModel(newTopic);
     return await topic.save();
