@@ -42,7 +42,7 @@ export default gql`
       tags: [String]
     ): Topic
 
-    deleteTopic(id: ID!): [Topic]
+    deleteTopic(_id: ID!): Topic
 
     createComment(topicId: ID!, author: String!, commentBody: String!): Comment
   }
