@@ -48,6 +48,17 @@ export const topicMutation = {
     return await topic.save();
   },
   // updateTopic
+  updateTopic: async (
+    _: unknown,
+    topicUpdates: ITopicUpdates
+  ): Promise<ITopic | null> => {
+    const topic = await TopicModel.findOneAndUpdate(
+      { _id: topicUpdates._id },
+      { $set: topicUpdates },
+      { new: true }
+    );
+    return topic;
+  },
   // deleteTopic
 
   createComment: async (
@@ -65,3 +76,12 @@ export const topicMutation = {
     return await commentModel.save();
   },
 };
+
+interface ITopicUpdates {
+  _id: string;
+  username?: string;
+  subject?: string;
+  body?: string;
+  url?: [string];
+  tags?: [string];
+}
