@@ -8,6 +8,7 @@ const mongooseConnect = async (): Promise<void> => {
       autoIndex: true,
       useNewUrlParser: true,
       useUnifiedTopology: true,
+      useFindAndModify: false,
     });
 
     // eslint-disable-next-line no-console
