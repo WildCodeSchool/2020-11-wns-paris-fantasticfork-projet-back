@@ -65,9 +65,6 @@ export const topicMutation = {
       author,
       commentBody,
       date,
-      like: 0,
-      dislike: 0,
-      lastUpdateDate: null,
     };
     const commentModel = new CommentModel(newComment);
     return await commentModel.save();
