@@ -4,26 +4,15 @@ import CommentModel, { IComment } from '../../models/Comment';
 export const topicQueries = {
   topics: async (): Promise<ITopic[]> => {
     const topics = await TopicModel.find({});
+    const comments = await CommentModel.find({});
 
     const topicWithComment: ITopic[] = [];
 
-    // topics.forEach(async (topic) => {
-    //   const targetComments = await CommentModel.find({ topicId: topic._id });
-
-    //   targetComments.forEach((comment) => {
-    //     topic.comments.push(comment);
-    //   });
-
-    //   topicWithComment.push(topic);
-    // });
-
     for (let i = 0; i < topics.length; i++) {
-      const targetComments = await CommentModel.find({
-        topicId: topics[i]._id,
-      });
-
-      for (let ii = 0; ii < targetComments.length; ii++) {
-        topics[i].comments.push(targetComments[ii]);
+      for (let ii = 0; ii < comments.length; ii++) {
+        if (topics[i]._id.equals(comments[ii].topicId)) {
+          topics[i].comments.push(comments[ii]);
+        }
       }
       topicWithComment.push(topics[i]);
     }
