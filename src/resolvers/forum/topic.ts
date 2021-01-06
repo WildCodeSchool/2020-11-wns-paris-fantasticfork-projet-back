@@ -52,8 +52,26 @@ export const topicMutation = {
     const topic = new TopicModel(newTopic);
     return await topic.save();
   },
+
   // updateTopic
+  updateTopic: async (
+    _: unknown,
+    topicUpdates: ITopicUpdates
+  ): Promise<ITopic | null> => {
+    topicUpdates.updated_at = new Date(Date.now());
+    const topic = await TopicModel.findOneAndUpdate(
+      { _id: topicUpdates._id },
+      { $set: topicUpdates },
+      { new: true }
+    );
+    return topic;
+  },
+
   // deleteTopic
+  deleteTopic: async (_: unknown, topicId: string): Promise<ITopic | null> => {
+    const topic = TopicModel.findOneAndDelete({ _id: topicId });
+    return topic;
+  },
 
   createComment: async (
     _: unknown,
@@ -92,3 +110,13 @@ export const topicMutation = {
     return await CommentModel.findOneAndDelete({ _id: commentId });
   },
 };
+
+interface ITopicUpdates {
+  _id: string;
+  username?: string;
+  subject?: string;
+  body?: string;
+  url?: [string];
+  tags?: [string];
+  updated_at?: Date;
+}

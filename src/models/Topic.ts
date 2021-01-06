@@ -27,6 +27,9 @@ const TopicModel = new mongoose.Schema({
     type: mongoose.SchemaTypes.Date,
     required: true,
   },
+  updated_at: {
+    type: mongoose.SchemaTypes.Date,
+  },
   url: [mongoose.SchemaTypes.String],
   tags: [mongoose.SchemaTypes.String],
   comments: [
