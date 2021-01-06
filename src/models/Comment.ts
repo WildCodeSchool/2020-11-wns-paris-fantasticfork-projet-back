@@ -11,7 +11,6 @@ export interface IComment extends mongoose.Document {
   dislike: number;
   lastUpdateDate: Date;
 }
-
 export interface ICommentUpdates extends mongoose.Document {
   // authorId: string;
   commentId?: string;
@@ -26,7 +25,7 @@ const CommentModel = new mongoose.Schema({
   commentId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Comment',
-    required: true,
+    required: false,
   },
   // authorId: {
   //   type: mongoose.Schema.Types.ObjectId,
@@ -60,7 +59,7 @@ const CommentModel = new mongoose.Schema({
   },
   lastUpdateDate: {
     type: mongoose.SchemaTypes.Date,
-    required: true,
+    required: false,
   },
 });
 

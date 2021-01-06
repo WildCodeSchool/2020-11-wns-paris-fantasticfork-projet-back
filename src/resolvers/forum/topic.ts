@@ -20,33 +20,18 @@ export const topicQueries = {
   },
 
   topic: async (_: unknown, topicId: ITopic['_id']): Promise<ITopic | null> => {
-    // eslint-disable-next-line prefer-const
-    let topic: ITopic | null = await TopicModel.findById(topicId);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    // const topic: any = await TopicModel.findById(topicId);
+    const topic: ITopic | null = await TopicModel.findById(topicId);
     const comments = await CommentModel.find({
       topicId: topicId._id,
     });
-    console.log(comments[1]);
 
-    // console.log(topic);
     if (topic) {
-      // comments.forEach((comment) => {
-      //   topic.comments.push(comment);
-      // });
-      topic.comments.push(comments[1]);
-      console.log(topic);
+      comments.forEach((comment) => {
+        topic.comments.push(comment);
+      });
     }
 
     return topic;
-
-    // const _comments: IComment[] = [];
-    // if (topic) {
-    //   comments.forEach((comment) => {
-    //     _comments.push(comment);
-    //   });
-    // }
-    // return { ...topic, comments: _comments };
   },
 };
 
@@ -80,6 +65,9 @@ export const topicMutation = {
       author,
       commentBody,
       date,
+      like: 0,
+      dislike: 0,
+      lastUpdateDate: null,
     };
     const commentModel = new CommentModel(newComment);
     return await commentModel.save();

@@ -7,8 +7,7 @@ export interface ITopic extends mongoose.Document {
   date: Date;
   url: [string];
   tags: [string];
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  comments: Array<any>;
+  comments: Array<IComment>;
 }
 
 const TopicModel = new mongoose.Schema({
@@ -32,10 +31,8 @@ const TopicModel = new mongoose.Schema({
   tags: [mongoose.SchemaTypes.String],
   comments: [
     {
-      commentId: mongoose.Schema.Types.ObjectId,
-      date: mongoose.SchemaTypes.Date,
-      author: mongoose.SchemaTypes.String,
-      commentBody: mongoose.SchemaTypes.String,
+      type: mongoose.SchemaTypes.ObjectId,
+      ref: 'Comment',
     },
   ],
 });
