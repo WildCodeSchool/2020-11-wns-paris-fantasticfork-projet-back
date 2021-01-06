@@ -9,6 +9,15 @@ export interface ITopic extends mongoose.Document {
   tags: [string];
   comments: Array<IComment>;
 }
+export interface ITopicUpdates extends mongoose.Document {
+  _id: string;
+  username?: string;
+  subject?: string;
+  body?: string;
+  url?: [string];
+  tags?: [string];
+  updated_at?: Date;
+}
 
 const TopicModel = new mongoose.Schema({
   username: {

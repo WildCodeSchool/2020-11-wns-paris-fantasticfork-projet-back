@@ -1,4 +1,4 @@
-import TopicModel, { ITopic } from '../../models/Topic';
+import TopicModel, { ITopic, ITopicUpdates } from '../../models/Topic';
 import CommentModel, { IComment, ICommentUpdates } from '../../models/Comment';
 
 export const topicQueries = {
@@ -9,9 +9,9 @@ export const topicQueries = {
     const topicWithComment: ITopic[] = [];
 
     for (let i = 0; i < topics.length; i++) {
-      for (let ii = 0; ii < comments.length; ii++) {
-        if (topics[i]._id.equals(comments[ii].topicId)) {
-          topics[i].comments.push(comments[ii]);
+      for (let j = 0; j < comments.length; j++) {
+        if (topics[i]._id.equals(comments[j].topicId)) {
+          topics[i].comments.push(comments[j]);
         }
       }
       topicWithComment.push(topics[i]);
@@ -53,7 +53,6 @@ export const topicMutation = {
     return await topic.save();
   },
 
-  // updateTopic
   updateTopic: async (
     _: unknown,
     topicUpdates: ITopicUpdates
@@ -67,7 +66,6 @@ export const topicMutation = {
     return topic;
   },
 
-  // deleteTopic
   deleteTopic: async (_: unknown, topicId: string): Promise<ITopic | null> => {
     const topic = TopicModel.findOneAndDelete({ _id: topicId });
     return topic;
@@ -110,13 +108,3 @@ export const topicMutation = {
     return await CommentModel.findOneAndDelete({ _id: commentId });
   },
 };
-
-interface ITopicUpdates {
-  _id: string;
-  username?: string;
-  subject?: string;
-  body?: string;
-  url?: [string];
-  tags?: [string];
-  updated_at?: Date;
-}
