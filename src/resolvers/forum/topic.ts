@@ -1,18 +1,21 @@
-import TopicModel, { ITopic } from '../../models/Topic';
-import CommentModel, { IComment } from '../../models/Comment';
+import TopicModel, { ITopic, ITopicUpdates } from '../../models/Topic';
+import CommentModel, { IComment, ICommentUpdates } from '../../models/Comment';
 
 export const topicQueries = {
   topics: async (): Promise<ITopic[]> => {
     const topics = await TopicModel.find({});
-    const topicWithComment: ITopic[] | PromiseLike<ITopic[]> = [];
-    topics.forEach(async (topic) => {
-      const targetComments = await CommentModel.find({ topicId: topic._id });
-      targetComments.forEach((comment) => {
-        topic.comments.push(comment);
-      });
-      topicWithComment.push(topic);
-    });
+    const comments = await CommentModel.find({});
 
+    const topicWithComment: ITopic[] = [];
+
+    for (let i = 0; i < topics.length; i++) {
+      for (let j = 0; j < comments.length; j++) {
+        if (topics[i]._id.equals(comments[j].topicId)) {
+          topics[i].comments.push(comments[j]);
+        }
+      }
+      topicWithComment.push(topics[i]);
+    }
     return topicWithComment;
   },
 
@@ -23,7 +26,9 @@ export const topicQueries = {
     });
 
     if (topic) {
-      comments.forEach((comment) => topic.comments.push(comment));
+      comments.forEach((comment) => {
+        topic.comments.push(comment);
+      });
     }
 
     return topic;
@@ -40,15 +45,31 @@ export const topicMutation = {
       username,
       subject,
       body,
+      date,
       url,
       tags,
-      date,
     };
     const topic = new TopicModel(newTopic);
     return await topic.save();
   },
-  // updateTopic
-  // deleteTopic
+
+  updateTopic: async (
+    _: unknown,
+    topicUpdates: ITopicUpdates
+  ): Promise<ITopic | null> => {
+    topicUpdates.updated_at = new Date(Date.now());
+    const topic = await TopicModel.findOneAndUpdate(
+      { _id: topicUpdates._id },
+      { $set: topicUpdates },
+      { new: true }
+    );
+    return topic;
+  },
+
+  deleteTopic: async (_: unknown, topicId: string): Promise<ITopic | null> => {
+    const topic = TopicModel.findOneAndDelete({ _id: topicId });
+    return topic;
+  },
 
   createComment: async (
     _: unknown,
@@ -63,5 +84,27 @@ export const topicMutation = {
     };
     const commentModel = new CommentModel(newComment);
     return await commentModel.save();
+  },
+
+  updateComment: async (
+    _: unknown,
+    commentUpdates: ICommentUpdates
+  ): Promise<IComment | null> => {
+    const lastUpdateDate = new Date(Date.now());
+    const _commentUpdates = { ...commentUpdates, lastUpdateDate };
+
+    const result = await CommentModel.findByIdAndUpdate(
+      { _id: commentUpdates.commentId },
+      { $set: _commentUpdates },
+      { new: true }
+    );
+    return result;
+  },
+
+  deleteComment: async (
+    _: unknown,
+    commentId: string
+  ): Promise<IComment | null> => {
+    return await CommentModel.findOneAndDelete({ _id: commentId });
   },
 };

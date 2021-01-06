@@ -7,7 +7,16 @@ export interface ITopic extends mongoose.Document {
   date: Date;
   url: [string];
   tags: [string];
-  comments: IComment[];
+  comments: Array<IComment>;
+}
+export interface ITopicUpdates extends mongoose.Document {
+  _id: string;
+  username?: string;
+  subject?: string;
+  body?: string;
+  url?: [string];
+  tags?: [string];
+  updated_at?: Date;
 }
 
 const TopicModel = new mongoose.Schema({
@@ -27,13 +36,15 @@ const TopicModel = new mongoose.Schema({
     type: mongoose.SchemaTypes.Date,
     required: true,
   },
+  updated_at: {
+    type: mongoose.SchemaTypes.Date,
+  },
   url: [mongoose.SchemaTypes.String],
   tags: [mongoose.SchemaTypes.String],
   comments: [
     {
-      date: mongoose.SchemaTypes.Date,
-      author: mongoose.SchemaTypes.String,
-      commentBody: mongoose.SchemaTypes.String,
+      type: mongoose.SchemaTypes.ObjectId,
+      ref: 'Comment',
     },
   ],
 });
