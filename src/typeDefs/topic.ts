@@ -10,6 +10,9 @@ export default gql`
     url: [String]
     tags: [String]
     comments: [Comment]
+    like: Int
+    dislike: Int
+    lastUpdateDate: String
   }
 
   type Comment {
@@ -44,6 +47,9 @@ export default gql`
       body: String
       url: [String]
       tags: [String]
+      like: Int
+      dislike: Int
+      lastUpdateDate: String
     ): Topic
 
     deleteTopic(_id: ID!): Topic
@@ -55,6 +61,7 @@ export default gql`
       commentBody: String
       like: Int
       dislike: Int
+      lastUpdateDate: String
     ): Comment
 
     deleteComment(_id: ID!): Comment
