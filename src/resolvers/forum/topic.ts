@@ -4,15 +4,29 @@ import CommentModel, { IComment } from '../../models/Comment';
 export const topicQueries = {
   topics: async (): Promise<ITopic[]> => {
     const topics = await TopicModel.find({});
-    const topicWithComment: ITopic[] | PromiseLike<ITopic[]> = [];
-    topics.forEach(async (topic) => {
-      const targetComments = await CommentModel.find({ topicId: topic._id });
-      targetComments.forEach((comment) => {
-        topic.comments.push(comment);
-      });
-      topicWithComment.push(topic);
-    });
 
+    const topicWithComment: ITopic[] = [];
+
+    // topics.forEach(async (topic) => {
+    //   const targetComments = await CommentModel.find({ topicId: topic._id });
+
+    //   targetComments.forEach((comment) => {
+    //     topic.comments.push(comment);
+    //   });
+
+    //   topicWithComment.push(topic);
+    // });
+
+    for (let i = 0; i < topics.length; i++) {
+      const targetComments = await CommentModel.find({
+        topicId: topics[i]._id,
+      });
+
+      for (let ii = 0; ii < targetComments.length; ii++) {
+        topics[i].comments.push(targetComments[ii]);
+      }
+      topicWithComment.push(topics[i]);
+    }
     return topicWithComment;
   },
 
@@ -53,6 +67,7 @@ export const topicMutation = {
     _: unknown,
     topicUpdates: ITopicUpdates
   ): Promise<ITopic | null> => {
+    topicUpdates.updated_at = new Date(Date.now());
     const topic = await TopicModel.findOneAndUpdate(
       { _id: topicUpdates._id },
       { $set: topicUpdates },
@@ -90,4 +105,5 @@ interface ITopicUpdates {
   body?: string;
   url?: [string];
   tags?: [string];
+  updated_at?: Date;
 }
