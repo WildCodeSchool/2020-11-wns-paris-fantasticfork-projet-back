@@ -47,6 +47,12 @@ const TopicModel = new mongoose.Schema({
       ref: 'Comment',
     },
   ],
+  like: {
+    type: mongoose.SchemaTypes.Number,
+  },
+  dislike: {
+    type: mongoose.SchemaTypes.Number,
+  },
 });
 
 export default mongoose.model<ITopic>('Topic', TopicModel);
