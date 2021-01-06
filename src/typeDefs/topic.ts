@@ -51,7 +51,7 @@ export default gql`
     createComment(topicId: ID!, author: String!, commentBody: String!): Comment
 
     updateComment(
-      _id: ID!
+      commentId: ID!
       commentBody: String
       like: Int
       dislike: Int

@@ -14,7 +14,7 @@ export interface IComment extends mongoose.Document {
 
 export interface ICommentUpdates extends mongoose.Document {
   // authorId: string;
-  commentId: string;
+  commentId?: string;
   author?: string;
   commentBody?: string;
   like?: number;
