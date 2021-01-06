@@ -31,6 +31,7 @@ const TopicModel = new mongoose.Schema({
   tags: [mongoose.SchemaTypes.String],
   comments: [
     {
+      commentId: mongoose.Schema.Types.ObjectId,
       date: mongoose.SchemaTypes.Date,
       author: mongoose.SchemaTypes.String,
       commentBody: mongoose.SchemaTypes.String,

@@ -1,5 +1,5 @@
 import TopicModel, { ITopic } from '../../models/Topic';
-import CommentModel, { IComment } from '../../models/Comment';
+import CommentModel, { IComment, ICommentUpdates } from '../../models/Comment';
 
 export const topicQueries = {
   topics: async (): Promise<ITopic[]> => {
@@ -63,5 +63,27 @@ export const topicMutation = {
     };
     const commentModel = new CommentModel(newComment);
     return await commentModel.save();
+  },
+
+  updateComment: async (
+    _: unknown,
+    commentUpdates: ICommentUpdates
+  ): Promise<IComment | null> => {
+    const lastUpdateDate = new Date(Date.now());
+    const _commentUpdates = { ...commentUpdates, lastUpdateDate };
+
+    const result = await CommentModel.findByIdAndUpdate(
+      commentUpdates.commentId,
+      { $set: _commentUpdates },
+      { new: true }
+    );
+    return result;
+  },
+
+  deleteComment: async (
+    _: unknown,
+    commentId: string
+  ): Promise<IComment | null> => {
+    return await CommentModel.findOneAndDelete({ _id: commentId });
   },
 };

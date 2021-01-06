@@ -13,10 +13,14 @@ export default gql`
   }
 
   type Comment {
+    _id: ID
     topicId: ID
     author: String
     commentBody: String
     date: String
+    like: Int
+    dislike: Int
+    lastUpdateDate: String
   }
 
   extend type Query {
@@ -45,6 +49,15 @@ export default gql`
     deleteTopic(id: ID!): [Topic]
 
     createComment(topicId: ID!, author: String!, commentBody: String!): Comment
+
+    updateComment(
+      _id: ID!
+      commentBody: String
+      like: Int
+      dislike: Int
+    ): Comment
+
+    deleteComment(_id: ID!): Comment
   }
 `;
 
