@@ -57,7 +57,14 @@ export const topicMutation = {
     _: unknown,
     topicUpdates: ITopicUpdates
   ): Promise<ITopic | null> => {
-    topicUpdates.updated_at = new Date(Date.now());
+    if (
+      topicUpdates.subject ||
+      topicUpdates.body ||
+      topicUpdates.url ||
+      topicUpdates.tags
+    ) {
+      topicUpdates.updated_at = new Date(Date.now());
+    }
     const topic = await TopicModel.findOneAndUpdate(
       { _id: topicUpdates._id },
       { $set: topicUpdates },
@@ -90,12 +97,12 @@ export const topicMutation = {
     _: unknown,
     commentUpdates: ICommentUpdates
   ): Promise<IComment | null> => {
-    const lastUpdateDate = new Date(Date.now());
-    const _commentUpdates = { ...commentUpdates, lastUpdateDate };
-
+    if (commentUpdates.commentBody) {
+      commentUpdates.lastUpdateDate = new Date(Date.now());
+    }
     const result = await CommentModel.findByIdAndUpdate(
       { _id: commentUpdates.commentId },
-      { $set: _commentUpdates },
+      { $set: commentUpdates },
       { new: true }
     );
     return result;
