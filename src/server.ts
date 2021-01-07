@@ -3,7 +3,6 @@ import { ApolloServer } from 'apollo-server-express';
 import 'dotenv/config';
 import mongooseConnect from './config/mongodb';
 
-// we don't have these yet, but don't worry we'll get there.
 import typeDefs from './typeDefs';
 import resolvers from './resolvers';
 
