@@ -46,7 +46,7 @@ const CommentModel = new mongoose.Schema({
     required: true,
   },
   date: {
-    type: mongoose.SchemaTypes.Date,
+    type: mongoose.SchemaTypes.String,
     required: true,
   },
   like: {
@@ -58,7 +58,7 @@ const CommentModel = new mongoose.Schema({
     required: false,
   },
   lastUpdateDate: {
-    type: mongoose.SchemaTypes.Date,
+    type: mongoose.SchemaTypes.String,
     required: false,
   },
 });
