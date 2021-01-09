@@ -26,7 +26,7 @@ export const topicQueries = {
     });
 
     if (topic) {
-      comments.forEach((comment) => {
+      comments.forEach((comment: IComment) => {
         topic.comments.push(comment);
       });
     }

@@ -13,6 +13,8 @@ mongooseConnect();
 const server = new ApolloServer({
   typeDefs,
   resolvers,
+  introspection: true,
+  playground: true,
 });
 
 // init app
