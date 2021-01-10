@@ -2,7 +2,7 @@ import request from 'supertest';
 import dbHandler from '../../test/db-handler';
 import server from '../../test/gql-server-init';
 
-const fakeMutation = `
+const createTopic = `
   mutation {
     createTopic(
       username: "Test Jane"
@@ -27,7 +27,7 @@ describe('graphql resolvers', () => {
         .post('/graphql')
         .set('Content-Type', 'application/json')
         .set('Accept', 'application/json')
-        .send({ query: fakeMutation });
+        .send({ query: createTopic });
 
       expect(response.status).toBe(200);
       expect(response.body.data.createTopic.username).toEqual('Test Jane');
