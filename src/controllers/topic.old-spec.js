@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+/* eslint-disable @typescript-eslint/no-var-requires */
 const request = require('supertest');
 const app = require('../app');
 
