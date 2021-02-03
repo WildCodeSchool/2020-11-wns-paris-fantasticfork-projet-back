@@ -11,6 +11,10 @@ export default gql`
     role: String
   }
 
+  extend type Query {
+    users: [User]
+  }
+
   extend type Mutation {
     signUp(
       email: String!
