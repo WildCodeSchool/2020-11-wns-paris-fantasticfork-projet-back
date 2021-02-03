@@ -1,10 +1,13 @@
-import { topicQueries, topicMutation } from './forum/topic';
+import { userQuery, userMutation } from './user';
+import { topicQuery, topicMutation } from './forum/topic';
 
 export default {
   Query: {
-    ...topicQueries,
+    ...userQuery,
+    ...topicQuery,
   },
   Mutation: {
+    ...userMutation,
     ...topicMutation,
   },
 };

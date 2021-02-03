@@ -1,7 +1,7 @@
 import TopicModel, { ITopic, ITopicUpdates } from '../../models/Topic';
 import CommentModel, { IComment, ICommentUpdates } from '../../models/Comment';
 
-export const topicQueries = {
+export const topicQuery = {
   topics: async (): Promise<ITopic[]> => {
     const topics = await TopicModel.find({});
     const comments = await CommentModel.find({});
