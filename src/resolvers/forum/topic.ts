@@ -63,7 +63,7 @@ export const topicMutation = {
       topicUpdates.url ||
       topicUpdates.tags
     ) {
-      topicUpdates.updated_at = new Date(Date.now());
+      topicUpdates.lastUpdateDate = new Date(Date.now());
     }
     const topic = await TopicModel.findOneAndUpdate(
       { _id: topicUpdates._id },
