@@ -16,7 +16,7 @@ export interface ITopicUpdates extends mongoose.Document {
   body?: string;
   url?: [string];
   tags?: [string];
-  updated_at?: Date;
+  lastUpdateDate?: Date;
 }
 
 const TopicModel = new mongoose.Schema({
@@ -36,7 +36,7 @@ const TopicModel = new mongoose.Schema({
     type: mongoose.SchemaTypes.String,
     required: true,
   },
-  updated_at: {
+  lastUpdateDate: {
     type: mongoose.SchemaTypes.String,
   },
   url: [mongoose.SchemaTypes.String],
