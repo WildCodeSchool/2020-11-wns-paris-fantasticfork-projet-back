@@ -1,3 +1,4 @@
+import { userMutation } from './user';
 import { topicQueries, topicMutation } from './forum/topic';
 
 export default {
@@ -5,6 +6,7 @@ export default {
     ...topicQueries,
   },
   Mutation: {
+    ...userMutation,
     ...topicMutation,
   },
 };
