@@ -1,7 +1,6 @@
 import UserModel, { IUser } from '../models/User';
-import { hash, compare } from 'bcryptjs';
-
-const jwt = require('jsonwebtoken');
+import { compare } from 'bcryptjs';
+import jwt from 'jsonwebtoken';
 
 export const AuthentQuery = {
     login: async (_: unknown, { email, password }: AuthFormData) => {
@@ -9,12 +8,17 @@ export const AuthentQuery = {
         if (!user) {
             throw new Error('User not found');
         }
+
         const isPasswordValid = await compare(password, user.password);
         if (!isPasswordValid) {
             throw new Error('Password isn\'t correct');
         }
-        const token = await jwt.sign({ userID: user._id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_LIFE_TIME });
-        return { userID: user._id, token: token, tokenExpiration: process.env.JWT_LIFE_TIME };
+
+        if (process.env.JWT_SECRET) {
+            const token = await jwt.sign({ userID: user._id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_LIFE_TIME });
+            return { userID: user._id, token: token, tokenExpiration: process.env.JWT_LIFE_TIME };
+        }
+
     }
 }
 
