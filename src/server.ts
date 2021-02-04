@@ -1,10 +1,12 @@
 import express from 'express';
 import { ApolloServer } from 'apollo-server-express';
+
 import 'dotenv/config';
 import mongooseConnect from './config/mongodb';
 
 import typeDefs from './typeDefs';
 import resolvers from './resolvers';
+import IUser from './models/User';
 
 // Start Server
 mongooseConnect();
@@ -15,6 +17,13 @@ const server = new ApolloServer({
   resolvers,
   introspection: true,
   playground: true,
+  context: ({ req }) => {
+    const token = req.headers.authorization || '';
+    const user = new IUser(token);
+    if (!user) throw new Error('you must be logged in'); 
+    return { user }
+  }
+
 });
 
 // init app
