@@ -19,12 +19,18 @@ const server = new ApolloServer({
   introspection: true,
   playground: true,
   // use graphql context here to authanticate requests
+  // context: ({ req }) => {
+  //   const token = req.headers.authorization || '';
+  //   const user = new UserModel(token);
+  //   if (!user) throw new Error('you must be logged in');
+  //   return { user }
+  // }
 });
 
 // init app
 const app = express();
 app.use(isAuth);
-server.applyMiddleware({ app });
+server.applyMiddleware({ app, cors: false });
 
 // eslint-disable-next-line no-console
 const port = process.env.PORT || 4000;
