@@ -1,8 +1,10 @@
 import UserModel from '../models/User';
 import { compare } from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import {} from 'apollo-server-express';
+import { Request } from 'express';
 
-export const AuthentQuery = {
+export const AuthentMutation = {
   login: async (
     _: unknown,
     { email, password }: AuthFormData
@@ -23,12 +25,24 @@ export const AuthentQuery = {
         process.env.JWT_SECRET,
         { expiresIn: process.env.JWT_LIFE_TIME }
       );
+
+      await UserModel.findByIdAndUpdate(user._id, {
+        $set: { lastActivity: Date.now() },
+      });
+
       return {
         userID: user._id,
         token: token,
         tokenExpiration: process.env.JWT_LIFE_TIME,
       };
     } else throw new Error('No JWT Secret provided in .env');
+  },
+};
+
+export const AuthentQuery = {
+  testAuth: (_: unknown, token: string, context: Request): string => {
+    if (context.isAuth) return context.userID || 'no user id';
+    else return 'not connected';
   },
 };
 
