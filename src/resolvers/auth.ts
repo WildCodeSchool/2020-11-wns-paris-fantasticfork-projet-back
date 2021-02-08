@@ -3,12 +3,14 @@ import { compare } from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { AuthFormData, LoggedInResponse } from '../models/User';
 
-export const AuthentQuery = {
+export const AuthentificationMutation = {
   login: async (
     _: unknown,
     { email, password }: AuthFormData
   ): Promise<LoggedInResponse> => {
-    const user = await UserModel.findOne({ email: email });
+    console.log(email, password);
+
+    const user = await UserModel.findOne({ email });
     if (!user) {
       throw new Error('User not found');
     }

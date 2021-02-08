@@ -7,7 +7,7 @@ export default gql`
     tokenExpiration: String!
   }
 
-  extend type Query {
+  extend type Mutation {
     login(email: String!, password: String!): AuthData!
   }
 `;
