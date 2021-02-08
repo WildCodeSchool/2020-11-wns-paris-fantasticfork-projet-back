@@ -16,6 +16,17 @@ export enum userRole {
   teacher = 'TEACHER',
 }
 
+export interface AuthFormData {
+  email: string;
+  password: string;
+}
+
+export interface LoggedInResponse {
+  userID: string;
+  token: string;
+  tokenExpiration: string;
+}
+
 const UserModel = new mongoose.Schema(
   {
     email: {

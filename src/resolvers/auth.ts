@@ -1,6 +1,7 @@
 import UserModel from '../models/User';
 import { compare } from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import { AuthFormData, LoggedInResponse } from '../models/User';
 
 export const AuthentQuery = {
   login: async (
@@ -31,14 +32,3 @@ export const AuthentQuery = {
     } else throw new Error('No JWT Secret provided in .env');
   },
 };
-
-interface AuthFormData {
-  email: string;
-  password: string;
-}
-
-interface LoggedInResponse {
-  userID: string;
-  token: string;
-  tokenExpiration: string;
-}
