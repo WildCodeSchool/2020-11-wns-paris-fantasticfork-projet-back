@@ -6,7 +6,8 @@ import mongooseConnect from './config/mongodb';
 
 import typeDefs from './typeDefs';
 import resolvers from './resolvers';
-import UserModel from './models/User';
+
+import isAuth from './middlewares/is-auth';
 
 // Start Server
 mongooseConnect();
@@ -17,17 +18,12 @@ const server = new ApolloServer({
   resolvers,
   introspection: true,
   playground: true,
-  // context: ({ req }) => {
-  //   const token = req.headers.authorization || '';
-  //   const user = new UserModel(token);
-  //   if (!user) throw new Error('you must be logged in'); 
-  //   return { user }
-  // }
-
+  // use graphql context here to authanticate requests
 });
 
 // init app
 const app = express();
+app.use(isAuth);
 server.applyMiddleware({ app });
 
 // eslint-disable-next-line no-console
