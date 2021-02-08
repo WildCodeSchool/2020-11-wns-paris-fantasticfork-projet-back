@@ -8,7 +8,6 @@ export const AuthentificationMutation = {
     _: unknown,
     { email, password }: AuthFormData
   ): Promise<LoggedInResponse> => {
-    console.log(email, password);
 
     const user = await UserModel.findOne({ email });
     if (!user) {
