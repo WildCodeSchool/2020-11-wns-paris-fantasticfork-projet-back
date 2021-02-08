@@ -30,7 +30,7 @@ const server = new ApolloServer({
 // init app
 const app = express();
 app.use(isAuth);
-server.applyMiddleware({ app, cors: false });
+server.applyMiddleware({ app });
 
 // eslint-disable-next-line no-console
 const port = process.env.PORT || 4000;

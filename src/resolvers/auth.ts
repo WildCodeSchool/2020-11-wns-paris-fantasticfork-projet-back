@@ -19,11 +19,10 @@ export const AuthentQuery = {
     }
 
     if (process.env.JWT_SECRET && process.env.JWT_LIFE_TIME) {
-      const token = await jwt.sign(
-        { userID: user._id },
-        process.env.JWT_SECRET,
-        { expiresIn: process.env.JWT_LIFE_TIME }
-      );
+      const token = jwt.sign({ userID: user._id }, process.env.JWT_SECRET, {
+        expiresIn: process.env.JWT_LIFE_TIME,
+      });
+
       return {
         userID: user._id,
         token: token,

@@ -20,11 +20,11 @@ export const userMutation = {
     //Verify if user exist
     const existUser = await UserModel.findOne({ email }).exec();
     if (existUser) {
-      throw new AuthenticationError('E-mail already exist');
+      throw new AuthenticationError('E-mail already in use');
     }
+
     //Verify password
     const hashedPassword = await hash(password, 12);
-    console.log(hashedPassword);
 
     //Register a new user
     const newUser = {
@@ -36,15 +36,24 @@ export const userMutation = {
       role,
     };
     const user = await new UserModel(newUser).save();
+    if (!user) {
+      throw new Error('User not found');
+    }
 
-    //
-    const token = await jwt.sign({ userID: user._id }, process.env.JWT_SECRET, {
-      expiresIn: process.env.JWT_LIFE_TIME,
-    });
+    //create token
+    const tokenExpiration = process.env.JWT_LIFE_TIME || '';
+
+    const token = jwt.sign(
+      { userID: user._id },
+      process.env.JWT_SECRET as string,
+      { expiresIn: tokenExpiration }
+    );
+    console.log(token);
+
     return {
-      userID: user._id || '',
-      token: token || '',
-      tokenExpiration: process.env.JWT_LIFE_TIME || '',
+      userID: user._id,
+      token: token,
+      tokenExpiration,
     };
   },
 };
