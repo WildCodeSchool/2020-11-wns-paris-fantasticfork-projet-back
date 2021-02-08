@@ -18,12 +18,16 @@ const server = new ApolloServer({
   resolvers,
   introspection: true,
   playground: true,
-  // use graphql context here to authanticate requests
+  context: ({ req }) => ({
+    isAuth: req.isAuth,
+    userID: req.userID,
+  }),
 });
 
 // init app
 const app = express();
 app.use(isAuth);
+
 server.applyMiddleware({ app });
 
 // eslint-disable-next-line no-console
