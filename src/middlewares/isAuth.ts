@@ -1,8 +1,13 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
+import UserModel from '../models/User';
 
-export default (req: Request, res: Response, next: NextFunction): void => {
-  const authHeader = req.get('Authorisation');
+export default async (
+  req: Request,
+  _res: Response,
+  next: NextFunction
+): Promise<void> => {
+  const authHeader = req.get('Authorization');
   if (!authHeader) {
     req.isAuth = false;
     return next();
@@ -35,5 +40,10 @@ export default (req: Request, res: Response, next: NextFunction): void => {
 
   req.isAuth = true;
   req.userID = decodedToken.userID;
+
+  await UserModel.findByIdAndUpdate(decodedToken.userID, {
+    $set: { lastActivity: Date.now() },
+  });
+
   next();
 };

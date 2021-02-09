@@ -10,4 +10,9 @@ export default gql`
   extend type Mutation {
     login(email: String!, password: String!): AuthData!
   }
+
+  #query to test an authorize token
+  extend type Query {
+    testAuth: String
+  }
 `;

@@ -1,14 +1,21 @@
 import UserModel from '../models/User';
 import { compare } from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import { Request } from 'express';
 import { AuthFormData, LoggedInResponse } from '../models/User';
 
-export const AuthentificationMutation = {
+export const AuthQuery = {
+  testAuth: (_: unknown, token: string, context: Request): string => {
+    if (context.isAuth) return context.userID || 'no user id';
+    else return 'not connected';
+  },
+};
+
+export const AuthMutation = {
   login: async (
     _: unknown,
     { email, password }: AuthFormData
   ): Promise<LoggedInResponse> => {
-
     const user = await UserModel.findOne({ email });
     if (!user) {
       throw new Error('User not found');
@@ -20,8 +27,14 @@ export const AuthentificationMutation = {
     }
 
     if (process.env.JWT_SECRET && process.env.JWT_LIFE_TIME) {
-      const token = jwt.sign({ userID: user._id }, process.env.JWT_SECRET, {
-        expiresIn: process.env.JWT_LIFE_TIME,
+      const token = await jwt.sign(
+        { userID: user._id },
+        process.env.JWT_SECRET,
+        { expiresIn: process.env.JWT_LIFE_TIME }
+      );
+
+      await UserModel.findByIdAndUpdate(user._id, {
+        $set: { lastActivity: Date.now() },
       });
 
       return {
