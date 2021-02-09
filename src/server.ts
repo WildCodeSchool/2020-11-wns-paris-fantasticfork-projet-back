@@ -1,10 +1,13 @@
 import express from 'express';
 import { ApolloServer } from 'apollo-server-express';
+
 import 'dotenv/config';
 import mongooseConnect from './config/mongodb';
 
 import typeDefs from './typeDefs';
 import resolvers from './resolvers';
+
+import isAuth from './middlewares/isAuth';
 
 // Start Server
 mongooseConnect();
@@ -15,10 +18,16 @@ const server = new ApolloServer({
   resolvers,
   introspection: true,
   playground: true,
+  context: ({ req }) => ({
+    isAuth: req.isAuth,
+    userID: req.userID,
+  }),
 });
 
 // init app
 const app = express();
+app.use(isAuth);
+
 server.applyMiddleware({ app });
 
 // eslint-disable-next-line no-console
