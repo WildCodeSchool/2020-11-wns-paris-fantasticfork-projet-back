@@ -2,7 +2,7 @@
 
 ## Configuration ⚙️
 
-Copier le fichier _.sample.env_ en le renomant **_.env_**
+Copier le fichier _sample.env_ en le renomant **_.env_**
 
 Éditer le fichier **_.env_** avec les informations suivantes :
 
@@ -19,7 +19,7 @@ Copier le fichier _.sample.env_ en le renomant **_.env_**
 $ npm start
 ```
 
-#### Démarrage en mode développement (lance Typescript en mode watch et nodemon)
+#### Démarrage en mode développement (lance Nodemon et Typescript en mode watch)
 ```
 $ npm run start:watch
 ```
