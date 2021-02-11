@@ -7,7 +7,7 @@ import mongooseConnect from './config/mongodb';
 import typeDefs from './typeDefs';
 import resolvers from './resolvers';
 
-import isAuth from './middlewares/isAuth';
+import authenticateRequest from './middlewares/authenticateRequest';
 
 // Start Server
 mongooseConnect();
@@ -18,15 +18,11 @@ const server = new ApolloServer({
   resolvers,
   introspection: true,
   playground: true,
-  context: ({ req }) => ({
-    isAuth: req.isAuth,
-    userID: req.userID,
-  }),
+  context: authenticateRequest,
 });
 
 // init app
 const app = express();
-app.use(isAuth);
 
 server.applyMiddleware({ app });
 
