@@ -6,10 +6,10 @@ export interface IComment extends mongoose.Document {
   topicId: string;
   author: string;
   commentBody: string;
-  date: Date;
   like: number;
   dislike: number;
-  lastUpdateDate: Date;
+  createdAt: Date;
+  updatedAt?: Date;
 }
 export interface ICommentUpdates extends mongoose.Document {
   // authorId: string;
@@ -18,49 +18,48 @@ export interface ICommentUpdates extends mongoose.Document {
   commentBody?: string;
   like?: number;
   dislike?: number;
-  lastUpdateDate?: Date;
+  updatedAt: Date;
 }
 
-const CommentModel = new mongoose.Schema({
-  commentId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Comment',
-    required: false,
+const CommentModel = new mongoose.Schema(
+  {
+    commentId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Comment',
+      required: false,
+    },
+    // authorId: {
+    //   type: mongoose.Schema.Types.ObjectId,
+    //   ref: 'User',
+    //   required: true,
+    // },
+    topicId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Topic',
+      required: true,
+    },
+    author: {
+      type: mongoose.SchemaTypes.String,
+      required: true,
+    },
+    commentBody: {
+      type: mongoose.SchemaTypes.String,
+      required: true,
+    },
+    like: {
+      type: mongoose.SchemaTypes.Number,
+      required: false,
+    },
+    dislike: {
+      type: mongoose.SchemaTypes.Number,
+      required: false,
+    },
   },
-  // authorId: {
-  //   type: mongoose.Schema.Types.ObjectId,
-  //   ref: 'User',
-  //   required: true,
-  // },
-  topicId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Topic',
-    required: true,
-  },
-  author: {
-    type: mongoose.SchemaTypes.String,
-    required: true,
-  },
-  commentBody: {
-    type: mongoose.SchemaTypes.String,
-    required: true,
-  },
-  date: {
-    type: mongoose.SchemaTypes.String,
-    required: true,
-  },
-  like: {
-    type: mongoose.SchemaTypes.Number,
-    required: false,
-  },
-  dislike: {
-    type: mongoose.SchemaTypes.Number,
-    required: false,
-  },
-  lastUpdateDate: {
-    type: mongoose.SchemaTypes.String,
-    required: false,
-  },
-});
+  {
+    // creates updatedAt & createdAt properties, containing timestamps
+    // https://masteringjs.io/tutorials/mongoose/timestamps
+    timestamps: true,
+  }
+);
 
 export default mongoose.model<IComment>('Comment', CommentModel);
