@@ -1,7 +1,7 @@
 import { AuthenticationError } from 'apollo-server-express';
 import { hash } from 'bcryptjs';
 import UserModel, { IUser, LoggedInResponse } from '../models/User';
-import jwt from 'jsonwebtoken';
+import { createAccessToken } from '../helpers/createToken';
 
 export const userQuery = {
   users: async (): Promise<IUser[]> => {
@@ -43,16 +43,9 @@ export const userMutation = {
     //create token
     const tokenExpiration = process.env.JWT_LIFE_TIME || '';
 
-    const token = jwt.sign(
-      { userID: user._id },
-      process.env.JWT_SECRET as string,
-      { expiresIn: tokenExpiration }
-    );
-    console.log(token);
-
     return {
       userID: user._id,
-      token: token,
+      token: createAccessToken(user),
       tokenExpiration,
     };
   },
