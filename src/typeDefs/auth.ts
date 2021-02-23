@@ -5,6 +5,7 @@ export default gql`
     userID: String!
     token: String!
     tokenExpiration: String!
+    tokenVersion: Int
   }
 
   extend type Mutation {
