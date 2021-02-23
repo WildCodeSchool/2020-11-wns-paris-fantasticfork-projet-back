@@ -2,11 +2,13 @@ import express from 'express';
 import { ApolloServer } from 'apollo-server-express';
 
 import 'dotenv/config';
+import cookieParser from 'cookie-parser';
 import mongooseConnect from './config/mongodb';
 
 import typeDefs from './typeDefs';
 import resolvers from './resolvers';
 
+import refreshToken from './refreshToken';
 import authenticateRequest from './middlewares/authenticateRequest';
 
 // Start Server
@@ -23,6 +25,8 @@ const server = new ApolloServer({
 
 // init app
 const app = express();
+app.use(cookieParser());
+app.use('/refresh_token', refreshToken);
 
 server.applyMiddleware({ app });
 
