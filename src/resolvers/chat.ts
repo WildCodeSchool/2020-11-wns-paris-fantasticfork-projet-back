@@ -1,3 +1,4 @@
+import MessageModel from '../models/Message';
 import { PubSub } from 'apollo-server-express';
 const pubsub = new PubSub();
 
@@ -10,17 +11,11 @@ export const chatSubscription = {
 };
 
 export const chatMutation = {
-  newMessage: (
+  newMessage: async (
     _: unknown,
     { text, userId, username }: IMessageInput
-  ): IMessageOutput => {
-    const date = new Date();
-    const message = {
-      text,
-      userId,
-      username,
-      date,
-    };
+  ): Promise<IMessageOutput> => {
+    const message = await new MessageModel({ text, userId, username }).save();
     pubsub.publish('NEW_MESSAGE', { chatFeed: message });
     return message;
   },
@@ -33,5 +28,5 @@ interface IMessageInput {
 }
 
 interface IMessageOutput extends IMessageInput {
-  date: Date;
+  createdAt: Date;
 }
