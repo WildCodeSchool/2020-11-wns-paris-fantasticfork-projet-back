@@ -5,7 +5,7 @@ export default gql`
     text: String!
     userId: String!
     username: String!
-    date: String!
+    createdAt: String!
   }
 
   extend type Mutation {
@@ -14,6 +14,10 @@ export default gql`
       userId: String!
       username: String!
     ): IMessageOutput
+  }
+
+  extend type Query {
+    messages: [IMessageOutput]
   }
 
   extend type Subscription {
