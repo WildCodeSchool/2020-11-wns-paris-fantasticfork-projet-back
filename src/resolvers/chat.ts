@@ -2,7 +2,7 @@ import { PubSub } from 'apollo-server-express';
 const pubsub = new PubSub();
 
 export const chatSubscription = {
-  chatSubscribed: {
+  chatFeed: {
     subscribe: (): unknown => {
       return pubsub.asyncIterator(['NEW_MESSAGE']);
     },
@@ -21,7 +21,7 @@ export const chatMutation = {
       username,
       date,
     };
-    pubsub.publish('NEW_MESSAGE', { chatSubscribed: message });
+    pubsub.publish('NEW_MESSAGE', { chatFeed: message });
     return message;
   },
 };
