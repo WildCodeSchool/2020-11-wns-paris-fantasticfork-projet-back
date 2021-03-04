@@ -15,6 +15,7 @@ mongooseConnect();
 
 // Apollo server
 const server = new ApolloServer({
+  subscriptions: { path: '/subscribe' },
   typeDefs,
   resolvers,
   introspection: true,
