@@ -8,12 +8,24 @@ export interface IUser extends mongoose.Document {
   tags?: [string];
   role?: userRole;
   createdAt?: Date;
+  lastActivity?: Date | number;
 }
 
 export enum userRole {
   admin = 'ADMIN',
   student = 'STUDENT',
   teacher = 'TEACHER',
+}
+
+export interface AuthFormData {
+  email: string;
+  password: string;
+}
+
+export interface LoggedInResponse {
+  userID: string;
+  token: string;
+  tokenExpiration: string;
 }
 
 const UserModel = new mongoose.Schema(
@@ -44,6 +56,7 @@ const UserModel = new mongoose.Schema(
       enum: Object.values(userRole),
       default: userRole.student,
     },
+    lastActivity: Date,
   },
   {
     timestamps: { createdAt: 'createdAt' },

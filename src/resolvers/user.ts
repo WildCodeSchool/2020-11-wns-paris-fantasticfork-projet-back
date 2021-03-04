@@ -1,6 +1,7 @@
 import { AuthenticationError } from 'apollo-server-express';
 import { hash } from 'bcryptjs';
-import UserModel, { IUser } from '../models/User';
+import UserModel, { IUser, LoggedInResponse } from '../models/User';
+import jwt from 'jsonwebtoken';
 
 export const userQuery = {
   users: async (): Promise<IUser[]> => {
@@ -15,18 +16,17 @@ export const userMutation = {
   signUp: async (
     _: unknown,
     { email, password, firstname, lastname, tags, role }: IUser
-  ): Promise<IUser> => {
+  ): Promise<LoggedInResponse> => {
     //Verify if user exist
     const existUser = await UserModel.findOne({ email }).exec();
-    console.log(existUser);
-
     if (existUser) {
-      throw new AuthenticationError('E-mail already exist');
+      throw new AuthenticationError('E-mail already in use');
     }
 
+    //Verify password
     const hashedPassword = await hash(password, 12);
-    console.log(hashedPassword);
 
+    //Register a new user
     const newUser = {
       email,
       password: hashedPassword,
@@ -35,8 +35,25 @@ export const userMutation = {
       tags,
       role,
     };
+    const user = await new UserModel(newUser).save();
+    if (!user) {
+      throw new Error('User not found');
+    }
 
-    const user = new UserModel(newUser);
-    return await user.save();
+    //create token
+    const tokenExpiration = process.env.JWT_LIFE_TIME || '';
+
+    const token = jwt.sign(
+      { userID: user._id },
+      process.env.JWT_SECRET as string,
+      { expiresIn: tokenExpiration }
+    );
+    console.log(token);
+
+    return {
+      userID: user._id,
+      token: token,
+      tokenExpiration,
+    };
   },
 };

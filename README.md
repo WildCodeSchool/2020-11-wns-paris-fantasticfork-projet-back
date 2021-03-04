@@ -1,51 +1,44 @@
 # STUD'CONNECT - Backend ✨🔌
 
 ## Configuration ⚙️
-Éditer le fichier .sample.env :
-* Renseigner le port de l'application **APP_PORT**
-* Renseigner la chaine de connection à la base de données **DB_CONN_STRING**
 
-Renommer le fichier sample.env en **.env**
+Copier le fichier _sample.env_ en le renomant **_.env_**
 
-## Lancer le serveur 🏃
+Éditer le fichier **_.env_** avec les informations suivantes :
+
+* **NODE_ENV** : l'environnement de l'application.(_dev_, _production_ etc...)
+* **PORT** : Le port de l'application 
+* **MONGODB_URI** : URI de connection à la base de données 
+* **JWT_SECRET** : Code secret pour le chiffrage des tokens
+* **JWT_LIFE_TIME** : Durée de validité des tokens
+
+## Commandes package.json 📜
+
+#### Démarrage en mode production (à partir des sources compilées par Typescript)
 ```
-$ npm run start
+$ npm start
 ```
 
-## Routes 🛣
-### Format des données de retour
-* Si la requête réussit, la réponse sera au format ```{ "success": true, "body": { data } }```
-* Si la requête échoue, la réponse sera au format ```{ "success": false, "error": { error } }```
+#### Démarrage en mode développement (lance Nodemon et Typescript en mode watch)
+```
+$ npm run start:watch
+```
 
-### 📂 *TOPICS*
-**GET** ```/topics```
-* Retourne tous les *topics* avec leurs commentaires
+#### Lancer les tests
+```
+$ npm run test
+```
 
-**GET** ```/topic/:id```
-* Retourne un *topic* dont l'id est indiqué dans le paramètre **:id**
-* Les commentaires du *topic* sont également retournés
+#### Lancer les tests en mode watch
+```
+$ npm run test:watch
+```
 
-**POST** ```/topic```
-* Crée un nouveau document *topic*
-* Les paramètres envoyés dans le *body* de la requête doivent suivre le [modèle de Topic](https://github.com/WildCodeSchool/2020-11-wns-paris-fantasticfork-projet-back/blob/api-v2/src/models/Topic.js)
-
-**PUT** ```/topic/:id```
-* Met à jour un *topic* dont l'id est indiqué dans le paramètre **:id**
-* Les nouvelles informations doivent être passés dans le body de la requête
-
-**DELETE** ```/topic/:id```
-* Supprime un *topic* dont l'id est indiqué dans le paramètre **:id**
-* Supprime tous les commentaires associés au *topic*
-
-### 💬 *COMMENTS*
-**GET** ```/comments/:topicID```
-* Retourne les commentaires du topic dont l'id est indiqué par **:topicID**
-
-**POST** ```/comment```
-* Crée un nouveau document *comment*
-* Les paramètres envoyés dans le *body* de la requête doivent suivre le [modèle de Comment](https://github.com/WildCodeSchool/2020-11-wns-paris-fantasticfork-projet-back/blob/api-v2/src/models/Comment.js)
-
-### 👤 *USER*
-**POST** ```/user```
-* Crée un nouveau document *user*
-* Les paramètres envoyés dans le *body* de la requête doivent suivre le [modèle de User](https://github.com/WildCodeSchool/2020-11-wns-paris-fantasticfork-projet-back/blob/api-v2/src/models/User.js)
+#### Lancer un build Typescript
+```
+$ npm run build
+```
+#### Lancer eslint
+```
+$ npm run lint
+```

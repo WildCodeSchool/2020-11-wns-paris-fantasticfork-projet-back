@@ -6,13 +6,13 @@ export default gql`
     username: String
     subject: String
     body: String
-    date: String
     url: [String]
     tags: [String]
     comments: [Comment]
     like: Int
     dislike: Int
-    lastUpdateDate: String
+    createdAt: Float
+    updatedAt: Float
   }
 
   type Comment {
@@ -20,10 +20,10 @@ export default gql`
     topicId: ID
     author: String
     commentBody: String
-    date: String
     like: Int
     dislike: Int
-    lastUpdateDate: String
+    createdAt: Float
+    updatedAt: Float
   }
 
   extend type Query {
@@ -49,7 +49,7 @@ export default gql`
       tags: [String]
       like: Int
       dislike: Int
-      lastUpdateDate: String
+      updatedAt: Float
     ): Topic
 
     deleteTopic(_id: ID!): Topic
@@ -61,7 +61,7 @@ export default gql`
       commentBody: String
       like: Int
       dislike: Int
-      lastUpdateDate: String
+      updatedAt: Float
     ): Comment
 
     deleteComment(_id: ID!): Comment

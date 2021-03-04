@@ -9,6 +9,7 @@ export default gql`
     lastname: String!
     tags: [String]
     role: String
+    createdAt: String
   }
 
   extend type Query {
@@ -23,6 +24,6 @@ export default gql`
       lastname: String!
       tags: [String]
       role: String
-    ): User
+    ): AuthData
   }
 `;
