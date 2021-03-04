@@ -4,8 +4,7 @@ const pubsub = new PubSub();
 export const chatSubscription = {
   chatSubscribed: {
     subscribe: (): unknown => {
-      pubsub.asyncIterator('NEW_MESSAGE');
-      return 'Connected to the chat 😸';
+      return pubsub.asyncIterator(['NEW_MESSAGE']);
     },
   },
 };
@@ -22,7 +21,7 @@ export const chatMutation = {
       username,
       date,
     };
-    pubsub.publish('NEW_MESSAGE', { message });
+    pubsub.publish('NEW_MESSAGE', { chatSubscribed: message });
     return message;
   },
 };
