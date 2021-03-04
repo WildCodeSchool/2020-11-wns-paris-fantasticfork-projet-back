@@ -16,6 +16,10 @@ export default gql`
     ): IMessageOutput
   }
 
+  extend type Query {
+    messages: [IMessageOutput]
+  }
+
   extend type Subscription {
     chatFeed: IMessageOutput
   }
