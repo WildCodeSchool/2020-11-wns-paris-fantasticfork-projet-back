@@ -7,6 +7,9 @@ export default async ({
 }: {
   req: Request;
 }): Promise<AuthContextReturn> => {
+  // when using websocket subscriptions, req is unset
+  if (!req) return { isAuth: false };
+
   const authHeader = req.get('Authorization');
   if (!authHeader) {
     return { isAuth: false };

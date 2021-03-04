@@ -1,6 +1,7 @@
 import { userQuery, userMutation } from './user';
 import { topicQuery, topicMutation } from './forum/topic';
 import { AuthQuery, AuthMutation } from './auth';
+import { chatSubscription, chatMutation } from './chat';
 
 export default {
   Query: {
@@ -12,5 +13,9 @@ export default {
     ...userMutation,
     ...topicMutation,
     ...AuthMutation,
+    ...chatMutation,
+  },
+  Subscription: {
+    ...chatSubscription,
   },
 };
