@@ -1,7 +1,7 @@
 import express from 'express';
 import { verify } from 'jsonwebtoken';
 import UserModel from './models/User';
-import createAccessToken from './helpers/createToken';
+import { createAccessToken } from './helpers/createToken';
 
 const router = express.Router();
 
