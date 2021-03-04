@@ -17,6 +17,6 @@ export default gql`
   }
 
   extend type Subscription {
-    chatSubscribed: IMessageOutput # renvoyer un type message
+    chatFeed: IMessageOutput
   }
 `;
