@@ -5,7 +5,7 @@ export default gql`
     text: String!
     userId: String!
     username: String!
-    date: String!
+    createdAt: String!
   }
 
   extend type Mutation {
