@@ -2,10 +2,10 @@ import { gql } from 'apollo-server-express';
 
 export default gql`
   type IMessageOutput {
-    text: String
-    userId: String
-    username: String
-    date: String
+    text: String!
+    userId: String!
+    username: String!
+    date: String!
   }
 
   extend type Mutation {
@@ -17,6 +17,6 @@ export default gql`
   }
 
   extend type Subscription {
-    chatSubscribed: String # renvoyer un type message
+    chatSubscribed: IMessageOutput # renvoyer un type message
   }
 `;
