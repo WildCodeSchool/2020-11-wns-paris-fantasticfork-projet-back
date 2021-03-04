@@ -32,6 +32,4 @@ server.installSubscriptionHandlers(httpServer);
 
 // eslint-disable-next-line no-console
 const port = process.env.PORT || 4000;
-httpServer.listen(port, () =>
-  console.log(`Server started on ${port}`, server.subscriptionsPath)
-);
+httpServer.listen(port, () => console.log(`Server started on ${port}`));
