@@ -1,3 +1,4 @@
+import http from 'http';
 import express from 'express';
 import { ApolloServer } from 'apollo-server-express';
 
@@ -14,9 +15,6 @@ mongooseConnect();
 
 // Apollo server
 const server = new ApolloServer({
-  subscriptions: {
-    path: '/graphql',
-  },
   typeDefs,
   resolvers,
   introspection: true,
@@ -29,8 +27,11 @@ const app = express();
 
 server.applyMiddleware({ app });
 
+const httpServer = http.createServer(app);
+server.installSubscriptionHandlers(httpServer);
+
 // eslint-disable-next-line no-console
 const port = process.env.PORT || 4000;
-app.listen(port, () =>
+httpServer.listen(port, () =>
   console.log(`Server started on ${port}`, server.subscriptionsPath)
 );
