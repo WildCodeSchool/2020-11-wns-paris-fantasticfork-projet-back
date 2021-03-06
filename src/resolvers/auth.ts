@@ -43,6 +43,16 @@ export const AuthMutation = {
     } else throw new Error('No JWT Secret provided in .env');
   },
 
+  logout: (_: unknown, {}: never, { res }: { res: Response }): boolean => {
+    try {
+      sendRefreshToken(res, '');
+      return true;
+    } catch (err) {
+      console.log(err);
+      return false;
+    }
+  },
+
   revokeRefreshToken: async (
     _: unknown,
     { userId }: { userId: string }
