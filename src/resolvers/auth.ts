@@ -18,8 +18,6 @@ export const AuthMutation = {
     { email, password }: AuthFormData,
     { res }: { res: Response }
   ): Promise<LoggedInResponse> => {
-    console.log('res', res);
-
     const user = await UserModel.findOne({ email });
     if (!user) {
       throw new Error('User not found');
@@ -43,5 +41,22 @@ export const AuthMutation = {
         tokenExpiration: process.env.JWT_LIFE_TIME,
       };
     } else throw new Error('No JWT Secret provided in .env');
+  },
+
+  revokeRefreshToken: async (
+    _: unknown,
+    { userId }: { userId: string }
+  ): Promise<boolean> => {
+    try {
+      await UserModel.findOneAndUpdate(
+        { _id: userId },
+        { $inc: { tokenVersion: 1 } }
+      );
+
+      return true;
+    } catch (err) {
+      console.log(err);
+      return false;
+    }
   },
 };
