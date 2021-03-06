@@ -1,8 +1,9 @@
 import UserModel from '../models/User';
 import { compare } from 'bcryptjs';
-import { Request } from 'express';
+import { Request, Response } from 'express';
 import { AuthFormData, LoggedInResponse } from '../models/User';
-import { createAccessToken } from '../helpers/createToken';
+import { createAccessToken, createRefreshToken } from '../helpers/createToken';
+import sendRefreshToken from '../helpers/sendRefreshToken';
 
 export const AuthQuery = {
   testAuth: (_: unknown, token: string, context: Request): string => {
@@ -14,8 +15,11 @@ export const AuthQuery = {
 export const AuthMutation = {
   login: async (
     _: unknown,
-    { email, password }: AuthFormData
+    { email, password }: AuthFormData,
+    { res }: { res: Response }
   ): Promise<LoggedInResponse> => {
+    console.log('res', res);
+
     const user = await UserModel.findOne({ email });
     if (!user) {
       throw new Error('User not found');
@@ -30,6 +34,8 @@ export const AuthMutation = {
       await UserModel.findByIdAndUpdate(user._id, {
         $set: { lastActivity: Date.now() },
       });
+
+      sendRefreshToken(res, createRefreshToken(user));
 
       return {
         userID: user._id,
