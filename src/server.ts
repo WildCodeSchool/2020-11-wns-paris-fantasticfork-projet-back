@@ -9,7 +9,7 @@ import mongooseConnect from './config/mongodb';
 import typeDefs from './typeDefs';
 import resolvers from './resolvers';
 
-import refreshToken from './refreshToken';
+import refreshToken from './helpers/refreshToken';
 import authenticateRequest from './middlewares/authenticateRequest';
 
 // Start Server
