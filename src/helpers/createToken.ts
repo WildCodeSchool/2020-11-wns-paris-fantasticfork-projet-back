@@ -12,6 +12,6 @@ export const createRefreshToken = (user: IUser): string => {
   return sign(
     { userID: user._id, tokenVersion },
     process.env.JWT_REFRESH_SECRET,
-    { expiresIn: process.env.JWT_LIFE_TIME }
+    { expiresIn: '7d' }
   );
 };

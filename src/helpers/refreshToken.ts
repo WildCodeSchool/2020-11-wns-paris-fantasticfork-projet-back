@@ -5,8 +5,6 @@ import { createAccessToken, createRefreshToken } from './createToken';
 import sendRefreshToken from './sendRefreshToken';
 
 const refreshToken = async (req: Request, res: Response): Promise<Response> => {
-  console.log('cookie', req.cookies);
-
   const token = req.cookies.jid;
   if (!token) {
     return res.send({ ok: false, token: '' });
