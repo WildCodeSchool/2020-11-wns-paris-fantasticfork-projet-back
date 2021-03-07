@@ -43,7 +43,8 @@ export const AuthMutation = {
     } else throw new Error('No JWT Secret provided in .env');
   },
 
-  logout: (_: unknown, {}: never, { res }: { res: Response }): boolean => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/explicit-module-boundary-types
+  logout: (_: unknown, {}: any, { res }: { res: Response }): boolean => {
     try {
       sendRefreshToken(res, '');
       return true;
