@@ -40,7 +40,7 @@ app.use(
 app.use(cookieParser());
 app.get('/refresh_token', refreshToken);
 
-server.applyMiddleware({ app });
+server.applyMiddleware({ app, cors: false });
 
 const httpServer = http.createServer(app);
 server.installSubscriptionHandlers(httpServer);
