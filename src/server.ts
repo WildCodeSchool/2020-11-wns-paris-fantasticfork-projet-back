@@ -3,6 +3,7 @@ import express from 'express';
 import { ApolloServer } from 'apollo-server-express';
 
 import 'dotenv/config';
+import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import mongooseConnect from './config/mongodb';
 
@@ -27,8 +28,17 @@ const server = new ApolloServer({
 
 // init app
 const app = express();
+app.use(
+  cors({
+    origin:
+      process.env.NODE_ENV === 'dev'
+        ? 'http://localhost:3000'
+        : 'https://stud-connect.netlify.app/',
+    credentials: true,
+  })
+);
 app.use(cookieParser());
-app.use('/refresh_token', refreshToken);
+app.get('/refresh_token', refreshToken);
 
 server.applyMiddleware({ app });
 
