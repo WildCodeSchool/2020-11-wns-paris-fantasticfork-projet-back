@@ -1,8 +1,9 @@
 import UserModel from '../models/User';
 import { compare } from 'bcryptjs';
-import jwt from 'jsonwebtoken';
-import { Request } from 'express';
+import { Request, Response } from 'express';
 import { AuthFormData, LoggedInResponse } from '../models/User';
+import { createAccessToken, createRefreshToken } from '../helpers/createToken';
+import sendRefreshToken from '../helpers/sendRefreshToken';
 
 export const AuthQuery = {
   testAuth: (_: unknown, token: string, context: Request): string => {
@@ -14,7 +15,8 @@ export const AuthQuery = {
 export const AuthMutation = {
   login: async (
     _: unknown,
-    { email, password }: AuthFormData
+    { email, password }: AuthFormData,
+    { res }: { res: Response }
   ): Promise<LoggedInResponse> => {
     const user = await UserModel.findOne({ email });
     if (!user) {
@@ -27,21 +29,44 @@ export const AuthMutation = {
     }
 
     if (process.env.JWT_SECRET && process.env.JWT_LIFE_TIME) {
-      const token = await jwt.sign(
-        { userID: user._id },
-        process.env.JWT_SECRET,
-        { expiresIn: process.env.JWT_LIFE_TIME }
-      );
-
       await UserModel.findByIdAndUpdate(user._id, {
         $set: { lastActivity: Date.now() },
       });
 
+      sendRefreshToken(res, createRefreshToken(user));
+
       return {
         userID: user._id,
-        token: token,
+        token: createAccessToken(user),
         tokenExpiration: process.env.JWT_LIFE_TIME,
       };
     } else throw new Error('No JWT Secret provided in .env');
+  },
+
+  logout: (_: unknown, __: unknown, { res }: { res: Response }): boolean => {
+    try {
+      sendRefreshToken(res, '');
+      return true;
+    } catch (err) {
+      console.log(err);
+      return false;
+    }
+  },
+
+  revokeRefreshToken: async (
+    _: unknown,
+    { userId }: { userId: string }
+  ): Promise<boolean> => {
+    try {
+      await UserModel.findOneAndUpdate(
+        { _id: userId },
+        { $inc: { tokenVersion: 1 } }
+      );
+
+      return true;
+    } catch (err) {
+      console.log(err);
+      return false;
+    }
   },
 };

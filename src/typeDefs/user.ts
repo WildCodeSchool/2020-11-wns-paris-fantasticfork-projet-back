@@ -9,6 +9,7 @@ export default gql`
     lastname: String!
     tags: [String]
     role: String
+    tokenVersion: Int
     createdAt: String
   }
 

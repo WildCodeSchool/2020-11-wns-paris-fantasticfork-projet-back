@@ -9,6 +9,7 @@ export interface IUser extends mongoose.Document {
   role?: userRole;
   createdAt?: Date;
   lastActivity?: Date | number;
+  tokenVersion?: number;
 }
 
 export enum userRole {
@@ -26,6 +27,7 @@ export interface LoggedInResponse {
   userID: string;
   token: string;
   tokenExpiration: string;
+  tokenVersion?: number;
 }
 
 const UserModel = new mongoose.Schema(
@@ -55,6 +57,11 @@ const UserModel = new mongoose.Schema(
       type: mongoose.SchemaTypes.String,
       enum: Object.values(userRole),
       default: userRole.student,
+    },
+    tokenVersion: {
+      type: mongoose.SchemaTypes.Number,
+      default: 0,
+      required: false,
     },
     lastActivity: Date,
   },
