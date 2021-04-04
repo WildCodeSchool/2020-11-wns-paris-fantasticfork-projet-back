@@ -12,6 +12,7 @@ declare namespace NodeJS {
     PORT: string;
     MONGODB_URI: string;
     JWT_SECRET: string;
+    JWT_REFRESH_SECRET: string;
     JWT_LIFE_TIME: string;
   }
 }

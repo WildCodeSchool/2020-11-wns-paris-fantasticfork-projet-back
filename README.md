@@ -10,6 +10,7 @@ Copier le fichier _sample.env_ en le renomant **_.env_**
 * **PORT** : Le port de l'application 
 * **MONGODB_URI** : URI de connection à la base de données 
 * **JWT_SECRET** : Code secret pour le chiffrage des tokens
+* **JWT_REFRESH_SECRET** : Code secret pour le chiffrage des refresh tokens
 * **JWT_LIFE_TIME** : Durée de validité des tokens
 
 ## Commandes package.json 📜
