@@ -1,24 +1,31 @@
 import mongoose from 'mongoose';
-
 export interface IMessage extends mongoose.Document {
-  text: string;
+  chatRoomId: string;
   userId: string;
-  username: string;
+  text: string;
   createdAt: Date;
   updatedAt?: Date;
 }
 
-const MessageSchema = new mongoose.Schema(
+export interface IMessageInput {
+  text: string;
+  chatRoomId: string;
+  userId: string;
+}
+
+const MessageModel = new mongoose.Schema(
   {
-    text: {
-      type: mongoose.SchemaTypes.String,
+    chatRoomId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'ChatRoom',
       required: true,
     },
     userId: {
-      type: mongoose.SchemaTypes.String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
       required: true,
     },
-    username: {
+    text: {
       type: mongoose.SchemaTypes.String,
       required: true,
     },
@@ -28,4 +35,4 @@ const MessageSchema = new mongoose.Schema(
   }
 );
 
-export default mongoose.model<IMessage>('Message', MessageSchema);
+export default mongoose.model<IMessage>('Message', MessageModel);
