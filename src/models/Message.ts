@@ -12,6 +12,9 @@ export interface IMessageInput {
   chatRoomId: string;
   userId: string;
 }
+export interface IMessageOutput extends IMessageInput {
+  createdAt: Date;
+}
 
 const MessageModel = new mongoose.Schema(
   {

@@ -1,26 +1,45 @@
 import { gql } from 'apollo-server-express';
 
 export default gql`
-  type IMessageOutput {
+  type IChatRoom {
+    _id: String
+    participants: [IParticipant]
+    messages: [IMessage]
+    lastMessage: IMessage
+    unreadMessages: Int
+    updatedAt: String
+    createdAt: String
+  }
+
+  type IParticipant {
+    _id: String
+    userId: String!
+    chatRoomId: String
+    lastConnected: String
+  }
+
+  input ChatRoomInput {
+    userId: String!
+  }
+
+  type IMessage {
     text: String!
     userId: String!
-    username: String!
+    chatRoomId: String!
     createdAt: String!
   }
 
   extend type Mutation {
-    newMessage(
-      text: String!
-      userId: String!
-      username: String!
-    ): IMessageOutput
+    newChatRoom(input: [ChatRoomInput]): IChatRoom
+
+    newMessage(text: String!, userId: String!, chatRoomId: String!): IMessage
   }
 
   extend type Query {
-    messages: [IMessageOutput]
+    messages: [IMessage]
   }
 
   extend type Subscription {
-    chatFeed: IMessageOutput
+    chatFeed: IMessage
   }
 `;

@@ -17,7 +17,7 @@ const ChatRoomModel = new mongoose.Schema(
       {
         type: mongoose.SchemaTypes.ObjectId,
         ref: 'Participant',
-        required: true,
+        // required: true,
       },
     ],
     messages: [

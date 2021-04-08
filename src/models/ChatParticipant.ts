@@ -1,8 +1,8 @@
 import mongoose from 'mongoose';
 
 export interface IParticipant extends mongoose.Document {
-  chatRoom: string;
-  user: string;
+  chatRoomId: string;
+  userId: string;
   lastConnected: Date;
 }
 
@@ -18,7 +18,7 @@ const ParticipantModel = new mongoose.Schema({
     required: true,
   },
   lastConnected: {
-    type: mongoose.SchemaTypes.String,
+    type: mongoose.SchemaTypes.Date,
     required: true,
   },
 });
