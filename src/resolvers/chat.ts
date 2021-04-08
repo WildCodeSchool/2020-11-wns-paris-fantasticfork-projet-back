@@ -65,8 +65,12 @@ export const chatQuery = {
   ): Promise<IChatRoom[] | null> => {
     const myChatRooms = await ChatRoomModel.find({
       'participants.userId': userId,
-    });
+    })
+      .populate('messages')
+      .populate('lastMessage')
+      .exec();
 
+    console.log(myChatRooms);
     return myChatRooms;
   },
 
