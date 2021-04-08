@@ -10,8 +10,9 @@ export interface IChatRoom extends mongoose.Document {
   createdAt: Date;
 }
 export interface IParticipant extends mongoose.Document {
+  _id: string;
   userId: string;
-  lastConnected: Date;
+  lastConnected: number;
 }
 
 const ChatRoomModel = new mongoose.Schema(
@@ -24,7 +25,7 @@ const ChatRoomModel = new mongoose.Schema(
             ref: 'Participant',
             required: true,
           },
-          lastConnected: { type: Date, default: Date.now },
+          lastConnected: { type: Number },
         },
       ],
     },

@@ -25,10 +25,23 @@ export const chatMutation = {
     return newChatRoom;
   },
 
-  connectedToChatRoom: async(
+  connectedToChatRoom: async (
     _: unknown,
     { chatRoomId, userId }: ChatRoomInput
-  ): Promise<IChatRoom>
+  ): Promise<IChatRoom | null> => {
+    const myChatRoom = await ChatRoomModel.findById(chatRoomId).exec();
+
+    const updated = await ChatRoomModel.findByIdAndUpdate(chatRoomId, {
+      participants: myChatRoom?.participants.map((p) => {
+        if (p.userId == userId) {
+          p.lastConnected = Date.now();
+        }
+        return p;
+      }),
+    });
+
+    return updated;
+  },
 
   newMessage: async (
     _: unknown,
