@@ -4,6 +4,7 @@ import MessageModel, {
   IMessageOutput,
 } from '../models/Message';
 import ChatRoomModel, { IChatRoom, IParticipant } from '../models/ChatRoom';
+import UserModel from '../models/User';
 import { PubSub } from 'apollo-server-express';
 const pubsub = new PubSub();
 

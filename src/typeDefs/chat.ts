@@ -12,14 +12,14 @@ export default gql`
   }
 
   type IParticipant {
-    _id: String
     userId: String!
-    chatRoomId: String
+    name: String
     lastConnected: String
   }
 
   input ChatRoomInput {
     userId: String!
+    name: String!
   }
 
   type IMessage {
@@ -30,7 +30,7 @@ export default gql`
   }
 
   extend type Mutation {
-    newChatRoom(participants: [ChatRoomInput]): IChatRoom
+    newChatRoom(participants: [ChatRoomInput!]): IChatRoom
 
     connectedToChatRoom(chatRoomId: String!, userId: String!): IChatRoom
 

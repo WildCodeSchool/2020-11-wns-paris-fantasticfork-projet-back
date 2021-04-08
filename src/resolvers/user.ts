@@ -6,8 +6,6 @@ import { createAccessToken } from '../helpers/createToken';
 export const userQuery = {
   users: async (): Promise<IUser[]> => {
     const users = await UserModel.find({});
-    console.log(users);
-
     return users;
   },
 };

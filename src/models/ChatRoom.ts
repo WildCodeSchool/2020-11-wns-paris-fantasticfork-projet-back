@@ -12,6 +12,7 @@ export interface IChatRoom extends mongoose.Document {
 export interface IParticipant extends mongoose.Document {
   _id: string;
   userId: string;
+  name: string;
   lastConnected: number;
 }
 
@@ -25,6 +26,7 @@ const ChatRoomModel = new mongoose.Schema(
             ref: 'Participant',
             required: true,
           },
+          name: { type: String },
           lastConnected: { type: Number },
         },
       ],
