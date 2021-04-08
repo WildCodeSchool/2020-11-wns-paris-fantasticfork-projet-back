@@ -3,8 +3,7 @@ import MessageModel, {
   IMessageInput,
   IMessageOutput,
 } from '../models/Message';
-import ChatRoomModel, { IChatRoom, IParticipant } from '../models/ChatRoom';
-import UserModel from '../models/User';
+import ChatRoomModel, { IChatRoom } from '../models/ChatRoom';
 import { PubSub } from 'apollo-server-express';
 const pubsub = new PubSub();
 
@@ -49,6 +48,11 @@ export const chatMutation = {
     { text, userId, chatRoomId }: IMessageInput
   ): Promise<IMessageOutput> => {
     const message = await new MessageModel({ text, userId, chatRoomId }).save();
+    await ChatRoomModel.findByIdAndUpdate(chatRoomId, {
+      $push: { messages: message },
+      $set: { lastMessage: message },
+      $inc: { unreadMessages: 1 },
+    });
     pubsub.publish('NEW_MESSAGE', { chatFeed: message });
     return message;
   },
