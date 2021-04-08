@@ -54,6 +54,17 @@ export const chatMutation = {
 };
 
 export const chatQuery = {
+  myChatRooms: async (
+    _: unknown,
+    { userId }: ChatRoomInput
+  ): Promise<IChatRoom[] | null> => {
+    const myChatRooms = await ChatRoomModel.find({
+      'participants.userId': userId,
+    });
+
+    return myChatRooms;
+  },
+
   messages: async (): Promise<IMessage[]> => {
     const messages = await MessageModel.find({});
     return messages;

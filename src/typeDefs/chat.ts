@@ -38,6 +38,8 @@ export default gql`
   }
 
   extend type Query {
+    myChatRooms(userId: String!): [IChatRoom]
+
     messages: [IMessage]
   }
 
