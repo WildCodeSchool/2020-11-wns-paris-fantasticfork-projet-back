@@ -19,11 +19,16 @@ export const chatMutation = {
   newChatRoom: async (
     _: unknown,
     { participants }: { participants: ChatRoomInput[] }
-  ): Promise<IChatRoom['_id']> => {
+  ): Promise<IChatRoom> => {
     const newChatRoom = await new ChatRoomModel({ participants }).save();
 
     return newChatRoom;
   },
+
+  connectedToChatRoom: async(
+    _: unknown,
+    { chatRoomId, userId }: ChatRoomInput
+  ): Promise<IChatRoom>
 
   newMessage: async (
     _: unknown,
@@ -43,5 +48,6 @@ export const chatQuery = {
 };
 
 interface ChatRoomInput {
+  chatRoomId: string;
   userId: string;
 }
