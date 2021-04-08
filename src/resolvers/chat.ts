@@ -3,8 +3,7 @@ import MessageModel, {
   IMessageInput,
   IMessageOutput,
 } from '../models/Message';
-import ChatRoomModel, { IChatRoom } from '../models/ChatRoom';
-import ParticipantModel, { IParticipant } from '../models/ChatParticipant';
+import ChatRoomModel, { IChatRoom, IParticipant } from '../models/ChatRoom';
 import { PubSub } from 'apollo-server-express';
 const pubsub = new PubSub();
 
@@ -19,23 +18,11 @@ export const chatSubscription = {
 export const chatMutation = {
   newChatRoom: async (
     _: unknown,
-    participants: Array<IParticipant>
+    { participants }: { participants: ChatRoomInput[] }
   ): Promise<IChatRoom['_id']> => {
-    const newChatRoom = await new ChatRoomModel(participants).save();
+    const newChatRoom = await new ChatRoomModel({ participants }).save();
 
-    const inputParticipants = [...participants.input].map(
-      (participant: IParticipant) => ({
-        userId: participant.userId,
-        chatRoomId: newChatRoom._id,
-        lastConnected: Date.now(),
-      })
-    );
-
-    console.log(inputParticipants);
-
-    console.log(newParticipants);
-
-    return await ChatRoomModel.findById(newChatRoom._id);
+    return newChatRoom;
   },
 
   newMessage: async (
@@ -54,3 +41,7 @@ export const chatQuery = {
     return messages;
   },
 };
+
+interface ChatRoomInput {
+  userId: string;
+}

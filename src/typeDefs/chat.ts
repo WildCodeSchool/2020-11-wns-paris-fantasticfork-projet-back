@@ -30,7 +30,7 @@ export default gql`
   }
 
   extend type Mutation {
-    newChatRoom(input: [ChatRoomInput]): IChatRoom
+    newChatRoom(participants: [ChatRoomInput]): IChatRoom
 
     newMessage(text: String!, userId: String!, chatRoomId: String!): IMessage
   }

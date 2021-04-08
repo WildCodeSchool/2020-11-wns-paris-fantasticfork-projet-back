@@ -1,5 +1,4 @@
 import mongoose from 'mongoose';
-import { IParticipant } from './ChatParticipant';
 import { IMessage } from './Message';
 
 export interface IChatRoom extends mongoose.Document {
@@ -10,16 +9,25 @@ export interface IChatRoom extends mongoose.Document {
   updatedAt?: Date;
   createdAt: Date;
 }
+export interface IParticipant extends mongoose.Document {
+  userId: string;
+  lastConnected: Date;
+}
 
 const ChatRoomModel = new mongoose.Schema(
   {
-    participants: [
-      {
-        type: mongoose.SchemaTypes.ObjectId,
-        ref: 'Participant',
-        // required: true,
-      },
-    ],
+    participants: {
+      type: [
+        {
+          userId: {
+            type: mongoose.SchemaTypes.ObjectId,
+            ref: 'Participant',
+            required: true,
+          },
+          lastConnected: { type: Date, default: Date.now },
+        },
+      ],
+    },
     messages: [
       {
         type: mongoose.SchemaTypes.ObjectId,
