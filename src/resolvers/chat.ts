@@ -70,7 +70,6 @@ export const chatQuery = {
       .populate('lastMessage')
       .exec();
 
-    console.log(myChatRooms);
     return myChatRooms;
   },
 

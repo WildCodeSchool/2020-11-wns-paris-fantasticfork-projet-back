@@ -7,14 +7,14 @@ export default gql`
     messages: [IMessage]
     lastMessage: IMessage
     unreadMessages: Int
-    updatedAt: String
-    createdAt: String
+    updatedAt: Float
+    createdAt: Float
   }
 
   type IParticipant {
     userId: String!
     name: String
-    lastConnected: String
+    lastConnected: Float
   }
 
   input ChatRoomInput {
@@ -26,7 +26,7 @@ export default gql`
     text: String!
     userId: String!
     chatRoomId: String!
-    createdAt: String!
+    createdAt: Float!
   }
 
   extend type Mutation {
