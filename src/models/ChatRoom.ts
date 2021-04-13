@@ -23,7 +23,7 @@ const ChatRoomModel = new mongoose.Schema(
         {
           userId: {
             type: mongoose.SchemaTypes.ObjectId,
-            ref: 'Participant',
+            ref: 'User',
             required: true,
           },
           name: { type: String },
