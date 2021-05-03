@@ -1,4 +1,9 @@
-import MessageModel, { IMessage } from '../models/Message';
+import MessageModel, {
+  IMessage,
+  IMessageInput,
+  IMessageOutput,
+} from '../models/Message';
+import ChatRoomModel, { IChatRoom } from '../models/ChatRoom';
 import { PubSub } from 'apollo-server-express';
 const pubsub = new PubSub();
 
@@ -11,29 +16,70 @@ export const chatSubscription = {
 };
 
 export const chatMutation = {
+  newChatRoom: async (
+    _: unknown,
+    { participants }: { participants: ChatRoomInput[] }
+  ): Promise<IChatRoom> => {
+    const newChatRoom = await new ChatRoomModel({ participants }).save();
+
+    return newChatRoom;
+  },
+
+  connectedToChatRoom: async (
+    _: unknown,
+    { chatRoomId, userId }: ChatRoomInput
+  ): Promise<IChatRoom | null> => {
+    const myChatRoom = await ChatRoomModel.findById(chatRoomId).exec();
+
+    const updated = await ChatRoomModel.findByIdAndUpdate(chatRoomId, {
+      participants: myChatRoom?.participants.map((p) => {
+        if (p.userId == userId) {
+          p.lastConnected = Date.now();
+        }
+        return p;
+      }),
+    });
+
+    return updated;
+  },
+
   newMessage: async (
     _: unknown,
-    { text, userId, username }: IMessageInput
+    { text, userId, chatRoomId }: IMessageInput
   ): Promise<IMessageOutput> => {
-    const message = await new MessageModel({ text, userId, username }).save();
+    const message = await new MessageModel({ text, userId, chatRoomId }).save();
+    await ChatRoomModel.findByIdAndUpdate(chatRoomId, {
+      $push: { messages: message },
+      $set: { lastMessage: message },
+      $inc: { unreadMessages: 1 },
+    });
     pubsub.publish('NEW_MESSAGE', { chatFeed: message });
     return message;
   },
 };
 
 export const chatQuery = {
+  myChatRooms: async (
+    _: unknown,
+    { userId }: ChatRoomInput
+  ): Promise<IChatRoom[] | null> => {
+    const myChatRooms = await ChatRoomModel.find({
+      'participants.userId': userId,
+    })
+      .populate('messages')
+      .populate('lastMessage')
+      .exec();
+
+    return myChatRooms;
+  },
+
   messages: async (): Promise<IMessage[]> => {
     const messages = await MessageModel.find({});
     return messages;
   },
 };
 
-interface IMessageInput {
-  text: string;
+interface ChatRoomInput {
+  chatRoomId: string;
   userId: string;
-  username: string;
-}
-
-interface IMessageOutput extends IMessageInput {
-  createdAt: Date;
 }
