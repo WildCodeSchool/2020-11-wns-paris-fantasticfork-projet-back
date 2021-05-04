@@ -3,8 +3,9 @@ import MessageModel, {
   IMessageInput,
   IMessageOutput,
 } from '../models/Message';
-import ChatRoomModel, { IChatRoom } from '../models/ChatRoom';
+import ChatRoomModel, { IChatRoom, IParticipant } from '../models/ChatRoom';
 import { PubSub } from 'apollo-server-express';
+
 const pubsub = new PubSub();
 
 export const chatSubscription = {
@@ -31,13 +32,17 @@ export const chatMutation = {
   ): Promise<IChatRoom | null> => {
     const myChatRoom = await ChatRoomModel.findById(chatRoomId).exec();
 
-    const updated = await ChatRoomModel.findByIdAndUpdate(chatRoomId, {
-      participants: myChatRoom?.participants.map((p) => {
-        if (p.userId == userId) {
-          p.lastConnected = Date.now();
-        }
+    const participants = myChatRoom?.participants.map((p) => {
+      if (p.userId == userId) {
+        return { ...p, lastConnected: Date.now() };
+      } else {
         return p;
-      }),
+      }
+    });
+
+    console.log(myChatRoom?.participants);
+    const updated = await ChatRoomModel.findByIdAndUpdate(chatRoomId, {
+      participants: participants,
     });
 
     return updated;
@@ -62,7 +67,7 @@ export const chatQuery = {
   myChatRooms: async (
     _: unknown,
     { userId }: ChatRoomInput
-  ): Promise<IChatRoom[] | null> => {
+  ): Promise<unknown | null> => {
     const myChatRooms = await ChatRoomModel.find({
       'participants.userId': userId,
     })
@@ -70,7 +75,18 @@ export const chatQuery = {
       .populate('lastMessage')
       .exec();
 
-    return myChatRooms;
+    const data = JSON.parse(JSON.stringify(myChatRooms))[0];
+    // const userLastConnected =
+    //   data?.participants.filter((p: IParticipant) => p.userId === userId)
+    //     .lastConnected || null;
+    // console.log(data?.participants, userLastConnected);
+    // const unReadMessages = data?.messages.filter(
+    //   (m: IMessage) => m.createdAt > userLastConnected
+    // );
+    // data.unreadMessages = unReadMessages?.length;
+    // console.log(userLastConnected, unReadMessages, data.unreadMessages);
+
+    return data;
   },
 
   messages: async (): Promise<IMessage[]> => {
