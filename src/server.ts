@@ -28,7 +28,16 @@ const server = new ApolloServer({
 
 // init app
 const app = express();
-app.use(cors({}));
+app.use(
+  cors({
+    origin: [
+      'http://localhost:3000',
+      'https://stud-connect.netlify.app',
+      'https://studconnect.wns.wilders.dev',
+    ],
+    credentials: true,
+  })
+);
 app.use(cookieParser());
 app.get('/refresh_token', refreshToken);
 
