@@ -4,4 +4,9 @@ package-lock.json
 dist
 .DS_Store
 
+# docker (prod / staging)
+docker-compose.yml
+docker-compose.prod.yml
+docker-compose.dev.yml
+
 deploy_branch_main.sh
