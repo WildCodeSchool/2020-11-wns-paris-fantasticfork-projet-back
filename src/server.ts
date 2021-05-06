@@ -13,8 +13,6 @@ import resolvers from './resolvers';
 import refreshToken from './helpers/refreshToken';
 import authenticateRequest from './middlewares/authenticateRequest';
 
-//test again
-
 // Start Server
 mongooseConnect();
 
