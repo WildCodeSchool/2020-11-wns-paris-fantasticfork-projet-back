@@ -3,10 +3,10 @@ services:
   api:
     build: . 
     ports: 
-      - 4000:4000
+      - 4001:4001
     environment:
       - NODE_ENV=dev
-      - PORT=4000
+      - PORT=4001
       - MONGODB_URI=mongodb+srv://fantastic:fork@stud-connect.zfeul.mongodb.net/stud-connect?retryWrites=true&w=majority
       - JWT_SECRET=secret_key_fantastic_fork
       - JWT_REFRESH_SECRET=secret_key_fantastic_fork_refresh
