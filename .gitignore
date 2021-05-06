@@ -3,4 +3,5 @@ package-lock.json
 .env
 dist
 .DS_Store
+
 deploy_branch_main.sh
