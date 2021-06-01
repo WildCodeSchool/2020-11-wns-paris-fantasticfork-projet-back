@@ -1,6 +1,7 @@
 import { Response, Request } from 'express';
 import jwt from 'jsonwebtoken';
 import UserModel from '../models/User';
+import { AuthenticationError } from 'apollo-server-express';
 
 export default async ({
   res,
@@ -10,15 +11,23 @@ export default async ({
   req: Request;
 }): Promise<AuthContextReturn> => {
   // when using websocket subscriptions, req is unset
-  if (!req) return { res, isAuth: false };
+  if (!req) {
+    if (process.env.NODE_ENV !== 'dev')
+      throw new AuthenticationError('NOT AUTHORIZED');
+    return { res, isAuth: false };
+  }
 
   const authHeader = req.get('Authorization');
   if (!authHeader) {
+    if (process.env.NODE_ENV !== 'dev')
+      throw new AuthenticationError('NOT AUTHORIZED');
     return { res, isAuth: false };
   }
 
   const token = authHeader.split(' ')[1];
   if (!token || token === '') {
+    if (process.env.NODE_ENV !== 'dev')
+      throw new AuthenticationError('NOT AUTHORIZED');
     return { res, isAuth: false };
   }
 
@@ -27,10 +36,14 @@ export default async ({
   try {
     decodedToken = jwt.verify(token, process.env.JWT_SECRET);
   } catch (err) {
+    if (process.env.NODE_ENV !== 'dev')
+      throw new AuthenticationError('NOT AUTHORIZED');
     return { res, isAuth: false };
   }
 
   if (!decodedToken) {
+    if (process.env.NODE_ENV !== 'dev')
+      throw new AuthenticationError('NOT AUTHORIZED');
     return { res, isAuth: false };
   }
 
