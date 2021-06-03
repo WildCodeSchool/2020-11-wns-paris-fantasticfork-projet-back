@@ -70,11 +70,12 @@ export const topicMutation = {
 
   createComment: async (
     _: unknown,
-    { topicId, author, commentBody }: IComment
+    { topicId, author, authorID, commentBody }: IComment
   ): Promise<IComment> => {
     const newComment = {
       topicId,
       author,
+      authorID,
       commentBody,
     };
     const commentModel = new CommentModel(newComment);

@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
 export interface IComment extends mongoose.Document {
-  // authorId: string;
+  authorID: string;
   commentId: string;
   topicId: string;
   author: string;
@@ -12,7 +12,7 @@ export interface IComment extends mongoose.Document {
   updatedAt?: Date;
 }
 export interface ICommentUpdates extends mongoose.Document {
-  // authorId: string;
+  authorID: string;
   commentId?: string;
   author?: string;
   commentBody?: string;
@@ -28,11 +28,11 @@ const CommentModel = new mongoose.Schema(
       ref: 'Comment',
       required: false,
     },
-    // authorId: {
-    //   type: mongoose.Schema.Types.ObjectId,
-    //   ref: 'User',
-    //   required: true,
-    // },
+    authorID: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: true,
+    },
     topicId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Topic',
