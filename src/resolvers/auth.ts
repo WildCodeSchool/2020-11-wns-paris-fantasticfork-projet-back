@@ -37,6 +37,9 @@ export const AuthMutation = {
 
       return {
         userID: user._id,
+        firstname: user.firstname,
+        lastname: user.lastname,
+        role: user.role,
         token: createAccessToken(user),
         tokenExpiration: process.env.JWT_LIFE_TIME,
       };

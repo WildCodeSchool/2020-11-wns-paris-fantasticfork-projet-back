@@ -28,6 +28,9 @@ export interface LoggedInResponse {
   token: string;
   tokenExpiration: string;
   tokenVersion?: number;
+  role?: string;
+  firstname?: string;
+  lastname?: string;
 }
 
 const UserModel = new mongoose.Schema(
