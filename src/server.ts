@@ -13,6 +13,8 @@ import resolvers from './resolvers';
 import refreshToken from './helpers/refreshToken';
 import authenticateRequest from './middlewares/authenticateRequest';
 
+//test again
+
 // Start Server
 mongooseConnect();
 
@@ -30,7 +32,11 @@ const server = new ApolloServer({
 const app = express();
 app.use(
   cors({
-    origin: ['http://localhost:3000', 'https://stud-connect.netlify.app'],
+    origin: [
+      'http://localhost:3000',
+      'https://stud-connect.netlify.app',
+      'https://studconnect.wns.wilders.dev',
+    ],
     credentials: true,
   })
 );
