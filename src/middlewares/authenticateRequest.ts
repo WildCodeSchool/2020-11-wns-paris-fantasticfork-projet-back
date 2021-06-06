@@ -10,48 +10,26 @@ export default async ({
   res: Response;
   req: Request;
 }): Promise<AuthContextReturn> => {
-  // when using websocket subscriptions, req is unset
-  if (!req) {
-    if (process.env.NODE_ENV !== 'dev')
-      throw new AuthenticationError('NOT AUTHORIZED');
-    return { res, isAuth: false };
-  }
+  // Remind : when using websocket subscriptions, req is unset
 
-  const authHeader = req.get('Authorization');
-  if (!authHeader) {
-    if (process.env.NODE_ENV !== 'dev')
-      throw new AuthenticationError('NOT AUTHORIZED');
-    return { res, isAuth: false };
-  }
-
-  const token = authHeader.split(' ')[1];
-  if (!token || token === '') {
-    if (process.env.NODE_ENV !== 'dev')
-      throw new AuthenticationError('NOT AUTHORIZED');
-    return { res, isAuth: false };
-  }
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let decodedToken: any;
   try {
-    decodedToken = jwt.verify(token, process.env.JWT_SECRET);
-  } catch (err) {
-    if (process.env.NODE_ENV !== 'dev')
+    const token = req?.get('Authorization')?.split(' ')[1] || '';
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const decodedToken: any = jwt.verify(token, process.env.JWT_SECRET);
+
+    await UserModel.findByIdAndUpdate(decodedToken?.userID, {
+      $set: { lastActivity: Date.now() },
+    });
+
+    return { res, isAuth: true, userID: decodedToken?.userID };
+  } catch (e) {
+    if (process.env.NODE_ENV !== 'dev') {
       throw new AuthenticationError('NOT AUTHORIZED');
-    return { res, isAuth: false };
+    } else {
+      console.log(e);
+      return { res, isAuth: false };
+    }
   }
-
-  if (!decodedToken) {
-    if (process.env.NODE_ENV !== 'dev')
-      throw new AuthenticationError('NOT AUTHORIZED');
-    return { res, isAuth: false };
-  }
-
-  await UserModel.findByIdAndUpdate(decodedToken.userID, {
-    $set: { lastActivity: Date.now() },
-  });
-
-  return { res, isAuth: true, userID: decodedToken.userID };
 };
 
 interface AuthContextReturn {
