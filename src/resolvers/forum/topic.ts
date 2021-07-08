@@ -3,33 +3,43 @@ import CommentModel, { IComment, ICommentUpdates } from '../../models/Comment';
 
 export const topicQuery = {
   topics: async (): Promise<ITopic[]> => {
-    const topics = await TopicModel.find({});
-    const comments = await CommentModel.find({});
+    const topics = await TopicModel.find({})
+      .populate('comments')
+      .exec()
+      
+    return topics
 
-    const topicWithComment: ITopic[] = [];
+    // const comments = await CommentModel.find({});
 
-    for (let i = 0; i < topics.length; i++) {
-      for (let j = 0; j < comments.length; j++) {
-        if (topics[i]._id.equals(comments[j].topicId)) {
-          topics[i].comments.push(comments[j]);
-        }
-      }
-      topicWithComment.push(topics[i]);
-    }
-    return topicWithComment;
+    // const topicWithComment: ITopic[] = [];
+
+    // for (let i = 0; i < topics.length; i++) {
+    //   for (let j = 0; j < comments.length; j++) {
+    //     if (topics[i]._id.equals(comments[j].topicId)) {
+    //       topics[i].comments.push(comments[j]);
+    //     }
+    //   }
+    //   topicWithComment.push(topics[i]);
+    // }
+    // return topicWithComment;
   },
 
   topic: async (_: unknown, topicId: ITopic['_id']): Promise<ITopic | null> => {
-    const topic: ITopic | null = await TopicModel.findById(topicId);
-    const comments = await CommentModel.find({
-      topicId: topicId._id,
-    });
+    const topic: ITopic | null = await TopicModel.findById(topicId)      
+    .populate('comments')
+    .exec()
 
-    if (topic) {
-      comments.forEach((comment: IComment) => {
-        topic.comments.push(comment);
-      });
-    }
+    // .populate('comments')
+
+    // const comments = await CommentModel.find({
+    //   topicId: topicId._id,
+    // });
+
+    // if (topic) {
+    //   comments.forEach((comment: IComment) => {
+    //     topic.comments.push(comment);
+    //   });
+    // }
 
     return topic;
   },
