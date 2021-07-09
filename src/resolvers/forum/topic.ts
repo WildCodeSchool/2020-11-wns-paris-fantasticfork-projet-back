@@ -26,10 +26,8 @@ export const topicQuery = {
 
   topic: async (_: unknown, topicId: ITopic['_id']): Promise<ITopic | null> => {
     const topic: ITopic | null = await TopicModel.findById(topicId)      
-    .populate('comments')
-    .exec()
-
-    // .populate('comments')
+      .populate('comments')
+      .exec()
 
     // const comments = await CommentModel.find({
     //   topicId: topicId._id,
@@ -87,8 +85,11 @@ export const topicMutation = {
       author,
       commentBody,
     };
-    const commentModel = new CommentModel(newComment);
-    return await commentModel.save();
+    const comment = await new CommentModel(newComment).save();
+    const topic = await TopicModel.findByIdAndUpdate(topicId, {
+      $push: { comments: comment },
+    })
+    return comment;
   },
 
   updateComment: async (
