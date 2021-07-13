@@ -28,7 +28,14 @@ export const chatMutation = {
         $in: participants.map(m => mongoose.Types.ObjectId(m.userId))
       }
     }
-    const existRoom = (await ChatRoomModel.find(params)).find(cr=>cr.participants.length === participants.length)
+    const existRoom = (await ChatRoomModel.find(params)
+                      .populate('participants')
+                      .populate('messages')
+                      .populate('lastMessage')
+                      .exec())
+                      .filter(cr=>cr.participants.length === participants.length)[0]
+    console.log(existRoom.participants);
+    
       
     if(existRoom){
       return existRoom
