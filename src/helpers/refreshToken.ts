@@ -8,7 +8,7 @@ import sendRefreshToken from './sendRefreshToken';
 const refreshToken = async (req: Request, res: Response): Promise<Response> => {
   try {
     const token = req.cookies.jid;
-    console.log(token);
+    // console.log(token);
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const decodedToken: any = verify(token, process.env.JWT_REFRESH_SECRET);
