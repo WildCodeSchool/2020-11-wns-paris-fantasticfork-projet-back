@@ -5,6 +5,7 @@ import MessageModel, {
 } from '../models/Message';
 import ChatRoomModel, { IChatRoom, IParticipant } from '../models/ChatRoom';
 import { PubSub } from 'apollo-server-express';
+import mongoose from 'mongoose';
 
 const pubsub = new PubSub();
 
@@ -20,10 +21,20 @@ export const chatMutation = {
   newChatRoom: async (
     _: unknown,
     { participants }: { participants: ChatRoomInput[] }
-  ): Promise<IChatRoom> => {
-    const newChatRoom = await new ChatRoomModel({ participants }).save();
+  ): Promise<IChatRoom | IChatRoom[]> => {
 
-    return newChatRoom;
+    const params = {
+      "participants.userId": {
+        $in: participants.map(m => mongoose.Types.ObjectId(m.userId))
+      }
+    }
+    const existRoom = (await ChatRoomModel.find(params)).find(cr=>cr.participants.length === participants.length)
+      
+    if(existRoom){
+      return existRoom
+    } else {
+      return await new ChatRoomModel({ participants }).save();
+    }
   },
 
   connectedToChatRoom: async (
@@ -40,7 +51,6 @@ export const chatMutation = {
       }
     });
 
-    console.log(myChatRoom?.participants);
     const updated = await ChatRoomModel.findByIdAndUpdate(chatRoomId, {
       participants: participants,
     });
@@ -99,3 +109,7 @@ interface ChatRoomInput {
   chatRoomId: string;
   userId: string;
 }
+function $and($and: any, condition: void) {
+  throw new Error('Function not implemented.');
+}
+
