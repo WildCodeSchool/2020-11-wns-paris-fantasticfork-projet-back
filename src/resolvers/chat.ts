@@ -31,7 +31,8 @@ export const chatSubscription = {
 export const chatMutation = {
   newChatRoom: async (
     _: unknown,
-    { participants }: { participants: ChatRoomInput[] }
+    { participants }: { participants: ChatRoomInput[] },
+    context:any
   ): Promise<IChatRoom | IChatRoom[]> => {
 
     // const params = {
@@ -39,27 +40,26 @@ export const chatMutation = {
     // }
 
     const params = {
-    "participants": {$all: participants.map(m => {"userId": m.userId})}
+      "participants.userId": context.userID,
     }
 
-    // const params = {
-    //   "participants.userId": participants[0].userId,
-    //   "participants.userId": participants[1].userId,
-    // }
+    const participantsIdList = participants.map(p=>JSON.stringify(p.userId))
 
     const existRoom = (await ChatRoomModel.find(params)
       .populate('participants')
       .populate('messages')
       .populate('lastMessage')
       .exec())
-      .find(cr=>cr.participants.length === participants.length) 
-    
-    console.log(existRoom?.participants)
+      .filter(cr=>cr.participants.length === participants.length)
+      .find(r =>{
+        const idList = r.participants.map(p=>JSON.stringify(p.userId))
+        return idList.every(p=>participantsIdList.includes(p)) 
+        && participantsIdList.every(p=>idList.includes(p)) 
+      })
     
     if(existRoom){
       return existRoom
     } else {
-      console.log('created')
       return await new ChatRoomModel({ participants }).save();
     }
   },
