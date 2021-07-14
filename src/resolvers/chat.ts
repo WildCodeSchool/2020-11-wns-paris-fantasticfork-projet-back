@@ -1,12 +1,11 @@
-import mongoose from 'mongoose';
-import { PubSub, AuthenticationError } from 'apollo-server-express';
+import { PubSub, AuthenticationError, ApolloError } from 'apollo-server-express';
 import { withFilter } from 'graphql-subscriptions';
 import MessageModel, {
   IMessage,
   IMessageInput,
   IMessageOutput,
 } from '../models/Message';
-import ChatRoomModel, { IChatRoom, IParticipant } from '../models/ChatRoom';
+import ChatRoomModel, { IChatRoom } from '../models/ChatRoom';
 import { AuthContext } from '../middlewares/authenticateRequest'
 
 const pubsub = new PubSub();
@@ -66,23 +65,25 @@ export const chatMutation = {
 
   connectedToChatRoom: async (
     _: unknown,
-    { chatRoomId, userId }: ChatRoomInput
-  ): Promise<IChatRoom | null> => {
-    const myChatRoom = await ChatRoomModel.findById(chatRoomId).exec();
+    { chatRoomId }: ChatRoomInput,
+    context:any
+  ): Promise <any> => {
+    // const myChatRoom = await ChatRoomModel.findById(chatRoomId)
+    // const participants = myChatRoom?.participants.map((p) => {
+    //   if (JSON.stringify(p.userId) === JSON.stringify(context.userID)) {
+    //     return { ...p, lastConnected: Date.now() };
+    //   } else {
+    //     return p;
+    //   }
+    // });
 
-    const participants = myChatRoom?.participants.map((p) => {
-      if (p.userId == userId) {
-        return { ...p, lastConnected: Date.now() };
-      } else {
-        return p;
-      }
-    });
+    const userTimestampUpdate = await ChatRoomModel.findOneAndUpdate(
+      { "_id":chatRoomId, "participants.userId": context.userID },
+      { $set:{ "participants.$.lastConnected": Date.now() }},
+      {new: true }
+    );
 
-    const updated = await ChatRoomModel.findByIdAndUpdate(chatRoomId, {
-      participants: participants,
-    });
-
-    return updated;
+    return userTimestampUpdate;
   },
 
   newMessage: async (
@@ -105,14 +106,24 @@ export const chatMutation = {
 export const chatQuery = {
   myChatRooms: async (
     _: unknown,
-    { userId }: ChatRoomInput
+    { userId }: ChatRoomInput,
+    context:any
   ): Promise<unknown | null> => {
-    const myChatRooms = await ChatRoomModel.find({
+    const myChatRooms = (await ChatRoomModel.find({
       'participants.userId': userId,
     })
       .populate('messages')
       .populate('lastMessage')
-      .exec();
+      .exec())
+      // .map(cr => {
+      //   const userLastConnected = cr.participants.find(p=>p.userId == context?.userID)?.lastConnected
+      //   console.log(userLastConnected);
+        
+      //   // const unreadMessages = cr.messages.forEach(msg => console.log(msg.createdAt,"/",userLastConnected))
+      //   // console.log(unreadMessages)
+      //   cr.unreadMessages = !userLastConnected ? cr.messages.length : 5
+      //   return cr
+      // })
 
     // const userLastConnected =
     //   data?.participants.filter((p: IParticipant) => p.userId === userId)
