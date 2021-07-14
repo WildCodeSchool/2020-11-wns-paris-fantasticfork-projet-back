@@ -22,8 +22,6 @@ export const chatSubscription = {
         }
       },
       (payload, _, context) => {
-        console.log(payload, context)
-        console.log(payload.participants.findIndex(p=> p.userID===context?.userId))
         return !!(payload.participants.findIndex(p=> p.userID===context?.userId) === 0)
       }
     ),
@@ -36,22 +34,32 @@ export const chatMutation = {
     { participants }: { participants: ChatRoomInput[] }
   ): Promise<IChatRoom | IChatRoom[]> => {
 
+    // const params = {
+    // "participants.userId": {$in: participants.map(m => m.userId)}
+    // }
+
     const params = {
-      "participants.userId": {
-        $in: participants.map(m => mongoose.Types.ObjectId(m.userId))
-      }
+    "participants": {$all: participants.map(m => {"userId": m.userId})}
     }
+
+    // const params = {
+    //   "participants.userId": participants[0].userId,
+    //   "participants.userId": participants[1].userId,
+    // }
+
     const existRoom = (await ChatRoomModel.find(params)
       .populate('participants')
       .populate('messages')
       .populate('lastMessage')
       .exec())
-      .filter(cr=>cr.participants.length === participants.length)[0]
+      .find(cr=>cr.participants.length === participants.length) 
     
-      
+    console.log(existRoom?.participants)
+    
     if(existRoom){
       return existRoom
     } else {
+      console.log('created')
       return await new ChatRoomModel({ participants }).save();
     }
   },
