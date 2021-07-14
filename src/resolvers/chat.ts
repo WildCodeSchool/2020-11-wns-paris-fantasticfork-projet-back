@@ -123,9 +123,6 @@ export const chatQuery = {
           const unreadMessages = cr.messages.filter(msg => 
             msg.userId !== context.userID && msg.createdAt > new Date(userLastConnected)
           )
-  
-          cr.messages.forEach(msg => console.log(msg.createdAt,"/",new Date(userLastConnected)))
-          console.log(unreadMessages)
           cr.unreadMessages = unreadMessages.length
         }
         return cr
