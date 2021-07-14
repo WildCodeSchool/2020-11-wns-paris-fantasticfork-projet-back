@@ -1,19 +1,32 @@
+import mongoose from 'mongoose';
+import { PubSub, AuthenticationError } from 'apollo-server-express';
+import { withFilter } from 'graphql-subscriptions';
 import MessageModel, {
   IMessage,
   IMessageInput,
   IMessageOutput,
 } from '../models/Message';
 import ChatRoomModel, { IChatRoom, IParticipant } from '../models/ChatRoom';
-import { PubSub } from 'apollo-server-express';
-import mongoose from 'mongoose';
+import { AuthContext } from '../middlewares/authenticateRequest'
 
 const pubsub = new PubSub();
 
 export const chatSubscription = {
   chatFeed: {
-    subscribe: (): unknown => {
-      return pubsub.asyncIterator(['NEW_MESSAGE']);
-    },
+    subscribe: withFilter(
+      (_, __, context) => {
+        if (context.userID) {
+          return pubsub.asyncIterator(["NEW_MESSAGE"]);
+        } else {
+          throw new AuthenticationError('NOT AUTHORIZED');
+        }
+      },
+      (payload, _, context) => {
+        console.log(payload, context)
+        console.log(payload.participants.findIndex(p=> p.userID===context?.userId))
+        return !!(payload.participants.findIndex(p=> p.userID===context?.userId) === 0)
+      }
+    ),
   },
 };
 
@@ -29,12 +42,11 @@ export const chatMutation = {
       }
     }
     const existRoom = (await ChatRoomModel.find(params)
-                      .populate('participants')
-                      .populate('messages')
-                      .populate('lastMessage')
-                      .exec())
-                      .filter(cr=>cr.participants.length === participants.length)[0]
-    console.log(existRoom.participants);
+      .populate('participants')
+      .populate('messages')
+      .populate('lastMessage')
+      .exec())
+      .filter(cr=>cr.participants.length === participants.length)[0]
     
       
     if(existRoom){
@@ -67,15 +79,17 @@ export const chatMutation = {
 
   newMessage: async (
     _: unknown,
-    { text, userId, chatRoomId }: IMessageInput
+    { text, userId, chatRoomId }: IMessageInput,
+    context:AuthContext
   ): Promise<IMessageOutput> => {
     const message = await new MessageModel({ text, userId, chatRoomId }).save();
-    await ChatRoomModel.findByIdAndUpdate(chatRoomId, {
+    const chatroom = await ChatRoomModel.findByIdAndUpdate(chatRoomId, {
       $push: { messages: message },
       $set: { lastMessage: message },
       $inc: { unreadMessages: 1 },
-    });
-    pubsub.publish('NEW_MESSAGE', { chatFeed: message });
+    }, {new: true});
+
+    pubsub.publish('NEW_MESSAGE', { chatFeed: message, participants: chatroom?.participants });
     return message;
   },
 };
@@ -92,7 +106,6 @@ export const chatQuery = {
       .populate('lastMessage')
       .exec();
 
-    const data = JSON.parse(JSON.stringify(myChatRooms))[0];
     // const userLastConnected =
     //   data?.participants.filter((p: IParticipant) => p.userId === userId)
     //     .lastConnected || null;
@@ -103,7 +116,7 @@ export const chatQuery = {
     // data.unreadMessages = unReadMessages?.length;
     // console.log(userLastConnected, unReadMessages, data.unreadMessages);
 
-    return data;
+    return myChatRooms;
   },
 
   messages: async (): Promise<IMessage[]> => {

@@ -14,13 +14,15 @@ export default async ({ res, req, connection }: {
     if(!token) throw new AuthenticationError('NOT AUTHORIZED');
     const decodedToken: any = jwt.verify(token, process.env.JWT_SECRET);
     if(!decodedToken) throw new AuthenticationError('NOT AUTHORIZED');
-    return { res, isAuth: true, userID: decodedToken?.userID };
+    return { isAuth: true, userID: decodedToken?.userID };
 
   } else {
-    try {
-      const token = req?.get('Authorization')?.split(' ')[1] || '';
-      const decodedToken: any = jwt.verify(token, process.env.JWT_SECRET);
+    const token = req?.get('Authorization')?.split(' ')[1] || '';
+    if(!token) throw new AuthenticationError('NOT AUTHORIZED');
+    const decodedToken: any = jwt.verify(token, process.env.JWT_SECRET);
+    if(!decodedToken) throw new AuthenticationError('NOT AUTHORIZED');
 
+    try {
       await UserModel.findByIdAndUpdate(decodedToken?.userID, {
         $set: { lastActivity: Date.now() },
       });
