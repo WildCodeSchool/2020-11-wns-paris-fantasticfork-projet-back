@@ -115,26 +115,22 @@ export const chatQuery = {
       .populate('messages')
       .populate('lastMessage')
       .exec())
-      // .map(cr => {
-      //   const userLastConnected = cr.participants.find(p=>p.userId == context?.userID)?.lastConnected
-      //   console.log(userLastConnected);
-        
-      //   // const unreadMessages = cr.messages.forEach(msg => console.log(msg.createdAt,"/",userLastConnected))
-      //   // console.log(unreadMessages)
-      //   cr.unreadMessages = !userLastConnected ? cr.messages.length : 5
-      //   return cr
-      // })
-
-    // const userLastConnected =
-    //   data?.participants.filter((p: IParticipant) => p.userId === userId)
-    //     .lastConnected || null;
-    // console.log(data?.participants, userLastConnected);
-    // const unReadMessages = data?.messages.filter(
-    //   (m: IMessage) => m.createdAt > userLastConnected
-    // );
-    // data.unreadMessages = unReadMessages?.length;
-    // console.log(userLastConnected, unReadMessages, data.unreadMessages);
-
+      .map(cr => {
+        const userLastConnected = cr.participants.find(p=>p.userId == context?.userID)?.lastConnected
+        if(!userLastConnected){
+          cr.unreadMessages = cr.messages.length
+        } else {
+          const unreadMessages = cr.messages.filter(msg => 
+            msg.userId !== context.userID && msg.createdAt > new Date(userLastConnected)
+          )
+  
+          cr.messages.forEach(msg => console.log(msg.createdAt,"/",new Date(userLastConnected)))
+          console.log(unreadMessages)
+          cr.unreadMessages = unreadMessages.length
+        }
+        return cr
+      })
+      
     return myChatRooms;
   },
 
