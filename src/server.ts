@@ -22,13 +22,13 @@ const server = new ApolloServer({
   resolvers,
   introspection: true,
   playground: true,
-  context: authenticateRequest,
   subscriptions: { 
     path: '/subscribe',
     onConnect: (connectionParams:any):any => {
       return connectionParams || null
     }, 
   },
+  context: authenticateRequest,
 });
 
 // init app
