@@ -38,10 +38,11 @@ export const topicQuery = {
 export const topicMutation = {
   createTopic: async (
     _: unknown,
-    { username, subject, body, url, tags }: ITopic
+    { username, subject, body, url, tags, authorID }: ITopic
   ): Promise<ITopic> => {
     const newTopic = {
       username,
+      authorID,
       subject,
       body,
       url,

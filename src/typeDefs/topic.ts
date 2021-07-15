@@ -3,6 +3,7 @@ import { gql } from 'apollo-server-express';
 export default gql`
   type Topic {
     _id: ID
+    authorID: ID
     username: String
     subject: String
     body: String
@@ -35,6 +36,7 @@ export default gql`
   extend type Mutation {
     createTopic(
       username: String!
+      authorID: ID!
       subject: String!
       body: String!
       url: [String]
