@@ -11,30 +11,32 @@ export default async ({ res, req, connection }: {
   // Subscriptions
   if (connection?.context) {
     const token = connection.context.authToken
-    if(!token) throw new AuthenticationError('NOT AUTHORIZED');
+    // if(!token) throw new AuthenticationError('NOT AUTHORIZED');
     const decodedToken: any = jwt.verify(token, process.env.JWT_SECRET);
-    if(!decodedToken) throw new AuthenticationError('NOT AUTHORIZED');
-    return { isAuth: true, userID: decodedToken?.userID };
+    // if(!decodedToken) throw new AuthenticationError('NOT AUTHORIZED');
+    if(decodedToken){
+      return { isAuth: true, userID: decodedToken?.userID };
+    } else {
+      return { res, isAuth: false };
+    }
 
   } else {
-    const token = req?.get('Authorization')?.split(' ')[1] || '';
-    if(!token) throw new AuthenticationError('NOT AUTHORIZED');
-    const decodedToken: any = jwt.verify(token, process.env.JWT_SECRET);
-    if(!decodedToken) throw new AuthenticationError('NOT AUTHORIZED');
-
     try {
+      const token = req?.get('Authorization')?.split(' ')[1] || '';
+      const decodedToken: any = jwt.verify(token, process.env.JWT_SECRET);
+
       await UserModel.findByIdAndUpdate(decodedToken?.userID, {
         $set: { lastActivity: Date.now() },
       });
 
       return { res, isAuth: true, userID: decodedToken?.userID };
     } catch (e) {
-      if (process.env.NODE_ENV !== 'dev') {
-        throw new AuthenticationError('NOT AUTHORIZED');
-      } else {
+      // if (process.env.NODE_ENV !== 'dev') {
+      //   throw new AuthenticationError('NOT AUTHORIZED');
+      // } else {
         console.log(e);
         return { res, isAuth: false };
-      }
+      // }
     }
   }
 };
