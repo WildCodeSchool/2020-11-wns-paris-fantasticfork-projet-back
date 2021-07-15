@@ -10,13 +10,13 @@ export default async ({ res, req, connection }: {
 }): Promise<AuthContext | any> => {
   // Subscriptions
   if (connection?.context) {
-    const token = connection.context.authToken
-    // if(!token) throw new AuthenticationError('NOT AUTHORIZED');
-    const decodedToken: any = jwt.verify(token, process.env.JWT_SECRET);
-    // if(!decodedToken) throw new AuthenticationError('NOT AUTHORIZED');
-    if(decodedToken){
+    try {
+      const token = connection.context.authToken
+      const decodedToken: any = jwt.verify(token, process.env.JWT_SECRET);
+    
       return { isAuth: true, userID: decodedToken?.userID };
-    } else {
+    } catch(e) {
+      console.log(e)
       return { res, isAuth: false };
     }
 
@@ -31,12 +31,8 @@ export default async ({ res, req, connection }: {
 
       return { res, isAuth: true, userID: decodedToken?.userID };
     } catch (e) {
-      // if (process.env.NODE_ENV !== 'dev') {
-      //   throw new AuthenticationError('NOT AUTHORIZED');
-      // } else {
         console.log(e);
         return { res, isAuth: false };
-      // }
     }
   }
 };
