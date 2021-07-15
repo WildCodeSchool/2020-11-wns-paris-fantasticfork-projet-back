@@ -13,13 +13,12 @@ module.exports = {
     sourceType: 'module',
   },
   extends: [
+    'airbnb-typescript/base',
     'plugin:@typescript-eslint/recommended',
-    'plugin:react/recommended',
     'plugin:prettier/recommended',
-    'prettier/react',
     'plugin:jest/recommended',
   ],
-  plugins: ['@typescript-eslint', 'react', 'prettier', 'jest'],
+  plugins: ['@typescript-eslint', 'prettier', 'jest'],
   settings: {
     react: {
       version: 'latest',

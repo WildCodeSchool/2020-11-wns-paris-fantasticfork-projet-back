@@ -3,36 +3,44 @@ import jwt from 'jsonwebtoken';
 import UserModel from '../models/User';
 import { AuthenticationError } from 'apollo-server-express';
 
-export default async ({
-  res,
-  req,
-}: {
+export default async ({ res, req, connection }: {
   res: Response;
   req: Request;
-}): Promise<AuthContextReturn> => {
-  // Remind : when using websocket subscriptions, req is unset
+  connection: any;
+}): Promise<AuthContext | any> => {
+  // Subscriptions
+  if (connection?.context) {
+    try {
+      const token = connection.context.authToken
+      if(!token) throw new Error("no token")
+      const decodedToken: any = jwt.verify(token, process.env.JWT_SECRET);
+      if(!decodedToken.userID) throw new Error("Token not valid")
 
-  try {
-    const token = req?.get('Authorization')?.split(' ')[1] || '';
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const decodedToken: any = jwt.verify(token, process.env.JWT_SECRET);
-
-    await UserModel.findByIdAndUpdate(decodedToken?.userID, {
-      $set: { lastActivity: Date.now() },
-    });
-
-    return { res, isAuth: true, userID: decodedToken?.userID };
-  } catch (e) {
-    if (process.env.NODE_ENV !== 'dev') {
-      throw new AuthenticationError('NOT AUTHORIZED');
-    } else {
-      console.log(e);
+      return { isAuth: true, userID: decodedToken?.userID };
+    } catch(e) {
+      console.log(e)
       return { res, isAuth: false };
+    }
+
+  } else {
+    try {
+      const token = req?.get('Authorization')?.split(' ')[1] || '';
+      if(!token) throw new Error("no token")
+      const decodedToken: any = jwt.verify(token, process.env.JWT_SECRET);
+      if(!decodedToken.userID) throw new Error("Token not valid")
+      await UserModel.findByIdAndUpdate(decodedToken?.userID, {
+        $set: { lastActivity: Date.now() },
+      });
+
+      return { res, isAuth: true, userID: decodedToken?.userID };
+    } catch (e) {
+        console.log(e);
+        return { res, isAuth: false };
     }
   }
 };
 
-interface AuthContextReturn {
+export interface AuthContext {
   res: Response;
   isAuth: boolean;
   userID?: string;

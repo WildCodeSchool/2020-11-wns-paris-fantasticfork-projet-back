@@ -1,35 +1,20 @@
 import TopicModel, { ITopic, ITopicUpdates } from '../../models/Topic';
 import CommentModel, { IComment, ICommentUpdates } from '../../models/Comment';
+import { AuthContext } from '../../middlewares/authenticateRequest'
 
 export const topicQuery = {
   topics: async (): Promise<ITopic[]> => {
-    const topics = await TopicModel.find({});
-    const comments = await CommentModel.find({});
-
-    const topicWithComment: ITopic[] = [];
-
-    for (let i = 0; i < topics.length; i++) {
-      for (let j = 0; j < comments.length; j++) {
-        if (topics[i]._id.equals(comments[j].topicId)) {
-          topics[i].comments.push(comments[j]);
-        }
-      }
-      topicWithComment.push(topics[i]);
-    }
-    return topicWithComment;
+    const topics = await TopicModel.find({})
+      .populate('comments')
+      .exec()
+      
+    return topics
   },
 
   topic: async (_: unknown, topicId: ITopic['_id']): Promise<ITopic | null> => {
-    const topic: ITopic | null = await TopicModel.findById(topicId);
-    const comments = await CommentModel.find({
-      topicId: topicId._id,
-    });
-
-    if (topic) {
-      comments.forEach((comment: IComment) => {
-        topic.comments.push(comment);
-      });
-    }
+    const topic: ITopic | null = await TopicModel.findById(topicId)      
+      .populate('comments')
+      .exec()
 
     return topic;
   },
@@ -77,8 +62,11 @@ export const topicMutation = {
       author,
       commentBody,
     };
-    const commentModel = new CommentModel(newComment);
-    return await commentModel.save();
+    const comment = await new CommentModel(newComment).save();
+    const topic = await TopicModel.findByIdAndUpdate(topicId, {
+      $push: { comments: comment },
+    })
+    return comment;
   },
 
   updateComment: async (

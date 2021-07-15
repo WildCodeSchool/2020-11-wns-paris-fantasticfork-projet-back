@@ -9,18 +9,20 @@ import mongooseConnect from './config/mongodb';
 
 import typeDefs from './typeDefs';
 import resolvers from './resolvers';
-
 import refreshToken from './helpers/refreshToken';
 import authenticateRequest from './middlewares/authenticateRequest';
-
-//test again
 
 // Start Server
 mongooseConnect();
 
 // Apollo server
 const server = new ApolloServer({
-  subscriptions: { path: '/subscribe' },
+  subscriptions: { 
+    path: '/subscribe',
+    onConnect: (connectionParams:any):any => {
+      return connectionParams || null
+    }, 
+  },
   typeDefs,
   resolvers,
   introspection: true,
