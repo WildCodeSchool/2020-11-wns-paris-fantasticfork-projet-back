@@ -12,8 +12,10 @@ export default async ({ res, req, connection }: {
   if (connection?.context) {
     try {
       const token = connection.context.authToken
+      if(!token) throw new Error("no token")
       const decodedToken: any = jwt.verify(token, process.env.JWT_SECRET);
-    
+      if(!decodedToken.userID) throw new Error("Token not valid")
+
       return { isAuth: true, userID: decodedToken?.userID };
     } catch(e) {
       console.log(e)
@@ -23,8 +25,9 @@ export default async ({ res, req, connection }: {
   } else {
     try {
       const token = req?.get('Authorization')?.split(' ')[1] || '';
+      if(!token) throw new Error("no token")
       const decodedToken: any = jwt.verify(token, process.env.JWT_SECRET);
-
+      if(!decodedToken.userID) throw new Error("Token not valid")
       await UserModel.findByIdAndUpdate(decodedToken?.userID, {
         $set: { lastActivity: Date.now() },
       });
