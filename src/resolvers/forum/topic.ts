@@ -20,16 +20,9 @@ export const topicQuery = {
   },
 
   topic: async (_: unknown, topicId: ITopic['_id']): Promise<ITopic | null> => {
-    const topic: ITopic | null = await TopicModel.findById(topicId);
-    const comments = await CommentModel.find({
-      topicId: topicId._id,
-    });
-
-    if (topic) {
-      comments.forEach((comment: IComment) => {
-        topic.comments.push(comment);
-      });
-    }
+    const topic: ITopic | null = await TopicModel.findById(topicId)
+      .populate('comments')
+      .exec();
 
     return topic;
   },
@@ -80,13 +73,18 @@ export const topicMutation = {
       commentBody,
     };
     const commentModel = new CommentModel(newComment);
-    return await commentModel.save();
+    const comment = await commentModel.save();
+    await TopicModel.findByIdAndUpdate(topicId, {
+      $push: { comments: comment },
+    });
+    return comment;
   },
 
   updateComment: async (
     _: unknown,
     commentUpdates: ICommentUpdates
   ): Promise<IComment | null> => {
+    console.log(commentUpdates);
     const result = await CommentModel.findByIdAndUpdate(
       { _id: commentUpdates.commentId },
       { $set: commentUpdates },
