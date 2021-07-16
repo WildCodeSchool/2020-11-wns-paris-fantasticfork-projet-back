@@ -9,7 +9,6 @@ import mongooseConnect from './config/mongodb';
 
 import typeDefs from './typeDefs';
 import resolvers from './resolvers';
-
 import refreshToken from './helpers/refreshToken';
 import authenticateRequest from './middlewares/authenticateRequest';
 
@@ -18,7 +17,12 @@ mongooseConnect();
 
 // Apollo server
 const server = new ApolloServer({
-  subscriptions: { path: '/subscribe' },
+  subscriptions: { 
+    path: '/subscribe',
+    onConnect: (connectionParams:any):any => {
+      return connectionParams || null
+    }, 
+  },
   typeDefs,
   resolvers,
   introspection: true,
@@ -30,7 +34,11 @@ const server = new ApolloServer({
 const app = express();
 app.use(
   cors({
-    origin: ['http://localhost:3000', 'https://stud-connect.netlify.app'],
+    origin: [
+      'http://localhost:3000',
+      'https://stud-connect.netlify.app',
+      'https://studconnect.wns.wilders.dev',
+    ],
     credentials: true,
   })
 );

@@ -23,11 +23,11 @@ export interface ICommentUpdates extends mongoose.Document {
 
 const CommentModel = new mongoose.Schema(
   {
-    authorID: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
-      required: true,
-    },
+    // authorId: {
+    //   type: mongoose.Schema.Types.ObjectId,
+    //   ref: 'User',
+    //   required: true,
+    // },
     topicId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Topic',
@@ -51,8 +51,6 @@ const CommentModel = new mongoose.Schema(
     },
   },
   {
-    // creates updatedAt & createdAt properties, containing timestamps
-    // https://masteringjs.io/tutorials/mongoose/timestamps
     timestamps: true,
   }
 );

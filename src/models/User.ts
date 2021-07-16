@@ -39,11 +39,17 @@ const UserModel = new mongoose.Schema(
       type: mongoose.SchemaTypes.String,
       required: true,
       unique: true,
-      match: /.+@.+\..+/,
+      match: [/.+@.+\..+/, "Please enter a valid e-mail address"]    
     },
     password: {
       type: mongoose.SchemaTypes.String,
-      required: true,
+      required: "Password is Required",
+      validate: [
+        function(input) {
+          return input.length >= 6;
+        },
+        "Password should be longer."
+      ]
     },
     firstname: {
       type: mongoose.SchemaTypes.String,

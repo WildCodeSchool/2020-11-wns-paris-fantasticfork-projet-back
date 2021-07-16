@@ -3,58 +3,44 @@ import jwt from 'jsonwebtoken';
 import UserModel from '../models/User';
 import { AuthenticationError } from 'apollo-server-express';
 
-export default async ({
-  res,
-  req,
-}: {
+export default async ({ res, req, connection }: {
   res: Response;
   req: Request;
-}): Promise<AuthContextReturn> => {
-  // when using websocket subscriptions, req is unset
-  if (!req) {
-    if (process.env.NODE_ENV !== 'dev')
-      throw new AuthenticationError('NOT AUTHORIZED');
-    return { res, isAuth: false };
+  connection: any;
+}): Promise<AuthContext | any> => {
+  // Subscriptions
+  if (connection?.context) {
+    try {
+      const token = connection.context.authToken
+      if(!token) throw new Error("no token")
+      const decodedToken: any = jwt.verify(token, process.env.JWT_SECRET);
+      if(!decodedToken.userID) throw new Error("Token not valid")
+
+      return { isAuth: true, userID: decodedToken?.userID };
+    } catch(e) {
+      console.log(e)
+      return { res, isAuth: false };
+    }
+
+  } else {
+    try {
+      const token = req?.get('Authorization')?.split(' ')[1] || '';
+      if(!token) throw new Error("no token")
+      const decodedToken: any = jwt.verify(token, process.env.JWT_SECRET);
+      if(!decodedToken.userID) throw new Error("Token not valid")
+      await UserModel.findByIdAndUpdate(decodedToken?.userID, {
+        $set: { lastActivity: Date.now() },
+      });
+
+      return { res, isAuth: true, userID: decodedToken?.userID };
+    } catch (e) {
+        console.log(e);
+        return { res, isAuth: false };
+    }
   }
-
-  const authHeader = req.get('Authorization');
-  if (!authHeader) {
-    if (process.env.NODE_ENV !== 'dev')
-      throw new AuthenticationError('NOT AUTHORIZED');
-    return { res, isAuth: false };
-  }
-
-  const token = authHeader.split(' ')[1];
-  if (!token || token === '') {
-    if (process.env.NODE_ENV !== 'dev')
-      throw new AuthenticationError('NOT AUTHORIZED');
-    return { res, isAuth: false };
-  }
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let decodedToken: any;
-  try {
-    decodedToken = jwt.verify(token, process.env.JWT_SECRET);
-  } catch (err) {
-    if (process.env.NODE_ENV !== 'dev')
-      throw new AuthenticationError('NOT AUTHORIZED');
-    return { res, isAuth: false };
-  }
-
-  if (!decodedToken) {
-    if (process.env.NODE_ENV !== 'dev')
-      throw new AuthenticationError('NOT AUTHORIZED');
-    return { res, isAuth: false };
-  }
-
-  await UserModel.findByIdAndUpdate(decodedToken.userID, {
-    $set: { lastActivity: Date.now() },
-  });
-
-  return { res, isAuth: true, userID: decodedToken.userID };
 };
 
-interface AuthContextReturn {
+export interface AuthContext {
   res: Response;
   isAuth: boolean;
   userID?: string;
