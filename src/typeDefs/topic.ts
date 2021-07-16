@@ -3,6 +3,7 @@ import { gql } from 'apollo-server-express';
 export default gql`
   type Topic {
     _id: ID
+    authorID: ID
     username: String
     subject: String
     body: String
@@ -18,6 +19,7 @@ export default gql`
   type Comment {
     _id: ID
     topicId: ID
+    authorID: ID
     author: String
     commentBody: String
     like: Int
@@ -34,6 +36,7 @@ export default gql`
   extend type Mutation {
     createTopic(
       username: String!
+      authorID: ID!
       subject: String!
       body: String!
       url: [String]
@@ -54,7 +57,12 @@ export default gql`
 
     deleteTopic(_id: ID!): Topic
 
-    createComment(topicId: ID!, author: String!, commentBody: String!): Comment
+    createComment(
+      topicId: ID!
+      author: String!
+      authorID: ID!
+      commentBody: String!
+    ): Comment
 
     updateComment(
       commentId: ID!

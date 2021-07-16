@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
 export interface IComment extends mongoose.Document {
-  // authorId: string;
+  authorID: string;
   topicId: string;
   author: string;
   commentBody: string;
@@ -11,13 +11,14 @@ export interface IComment extends mongoose.Document {
   updatedAt?: Date;
 }
 export interface ICommentUpdates extends mongoose.Document {
-  // authorId: string;
-  commentId?: string;
+  authorID: string;
+  topicId?: string;
   author?: string;
   commentBody?: string;
   like?: number;
   dislike?: number;
   updatedAt: Date;
+  commentId: string;
 }
 
 const CommentModel = new mongoose.Schema(

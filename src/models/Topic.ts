@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 import { IComment } from './Comment';
 export interface ITopic extends mongoose.Document {
   username: string;
+  authorID: string;
   subject: string;
   body: string;
   updatedAt?: Date;
@@ -27,6 +28,10 @@ const TopicModel = new mongoose.Schema(
     username: {
       type: mongoose.SchemaTypes.String,
       required: true,
+    },
+    authorID: {
+      type: mongoose.SchemaTypes.ObjectId,
+      ref: 'User',
     },
     subject: {
       type: mongoose.SchemaTypes.String,

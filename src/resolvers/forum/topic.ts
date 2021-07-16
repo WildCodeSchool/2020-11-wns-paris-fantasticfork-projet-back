@@ -12,9 +12,9 @@ export const topicQuery = {
   },
 
   topic: async (_: unknown, topicId: ITopic['_id']): Promise<ITopic | null> => {
-    const topic: ITopic | null = await TopicModel.findById(topicId)      
+    const topic: ITopic | null = await TopicModel.findById(topicId)
       .populate('comments')
-      .exec()
+      .exec();
 
     return topic;
   },
@@ -23,10 +23,11 @@ export const topicQuery = {
 export const topicMutation = {
   createTopic: async (
     _: unknown,
-    { username, subject, body, url, tags }: ITopic
+    { username, subject, body, url, tags, authorID }: ITopic
   ): Promise<ITopic> => {
     const newTopic = {
       username,
+      authorID,
       subject,
       body,
       url,
@@ -55,11 +56,12 @@ export const topicMutation = {
 
   createComment: async (
     _: unknown,
-    { topicId, author, commentBody }: IComment
+    { topicId, author, authorID, commentBody }: IComment
   ): Promise<IComment> => {
     const newComment = {
       topicId,
       author,
+      authorID,
       commentBody,
     };
     const comment = await new CommentModel(newComment).save();
@@ -73,6 +75,7 @@ export const topicMutation = {
     _: unknown,
     commentUpdates: ICommentUpdates
   ): Promise<IComment | null> => {
+    console.log(commentUpdates);
     const result = await CommentModel.findByIdAndUpdate(
       { _id: commentUpdates.commentId },
       { $set: commentUpdates },
