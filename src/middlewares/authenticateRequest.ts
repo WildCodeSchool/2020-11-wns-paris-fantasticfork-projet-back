@@ -25,7 +25,7 @@ export default async ({ res, req, connection }: {
   } else {
     try {
       const token = req?.get('Authorization')?.split(' ')[1] || '';
-      if(!token) throw new Error("no token")
+      if(!token) throw new Error("no authorization token")
       const decodedToken: any = jwt.verify(token, process.env.JWT_SECRET);
       if(!decodedToken.userID) throw new Error("Token not valid")
       await UserModel.findByIdAndUpdate(decodedToken?.userID, {
