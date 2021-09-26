@@ -75,7 +75,6 @@ export const topicMutation = {
     _: unknown,
     commentUpdates: ICommentUpdates
   ): Promise<IComment | null> => {
-    console.log(commentUpdates);
     const result = await CommentModel.findByIdAndUpdate(
       { _id: commentUpdates.commentId },
       { $set: commentUpdates },
