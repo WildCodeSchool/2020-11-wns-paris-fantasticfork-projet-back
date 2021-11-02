@@ -26,6 +26,8 @@ export default gql`
     dislike: Int
     createdAt: Float
     updatedAt: Float
+    votersIdLikes: [ID]
+    votersIdDislikes: [ID]
   }
 
   extend type Query {
@@ -67,9 +69,30 @@ export default gql`
     updateComment(
       commentId: ID!
       commentBody: String
-      like: Int
-      dislike: Int
       updatedAt: Float
+      votersIdLike: ID
+      votersIdDislike: ID
+      voteType: String
+    ): Comment
+
+    likeComment(
+      commentId: ID!
+      commentBody: String
+      updatedAt: Float
+      votersIdLike: ID
+      votersIdDislike: ID
+      voteType: String
+      voterID: ID
+    ): Comment
+
+    dislikeComment(
+      commentId: ID!
+      commentBody: String
+      updatedAt: Float
+      votersIdLike: ID
+      votersIdDislike: ID
+      voteType: String
+      voterID: ID
     ): Comment
 
     deleteComment(_id: ID!): Comment

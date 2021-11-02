@@ -1,5 +1,5 @@
 import TopicModel, { ITopic, ITopicUpdates } from '../../models/Topic';
-import CommentModel, { IComment, ICommentUpdates } from '../../models/Comment';
+import CommentModel, { IComment, ICommentUpdates, ILikeDislike } from '../../models/Comment';
 import { AuthContext } from '../../middlewares/authenticateRequest'
 
 export const topicQuery = {
@@ -75,12 +75,24 @@ export const topicMutation = {
     _: unknown,
     commentUpdates: ICommentUpdates
   ): Promise<IComment | null> => {
-    const result = await CommentModel.findByIdAndUpdate(
-      { _id: commentUpdates.commentId },
-      { $set: commentUpdates },
-      { new: true }
-    );
-    return result;
+    const { commentId, voteType } = commentUpdates;
+    const comment = await CommentModel.findOne({_id: commentId});
+    
+    if (comment) {
+      const { votersIdLikes, votersIdDislikes} = comment;
+      let updatedComment = { ...commentUpdates, votersIdLikes, votersIdDislikes };
+
+      const result = await CommentModel.findByIdAndUpdate(
+        { _id: commentId },
+        { $set: commentUpdates },
+        { new: true }
+      );
+      console.log(result)
+      return result;
+      
+    } else {
+      return null;
+    }
   },
 
   deleteComment: async (
@@ -89,4 +101,86 @@ export const topicMutation = {
   ): Promise<IComment | null> => {
     return await CommentModel.findOneAndDelete({ _id: commentId });
   },
-};
+
+  likeComment: async (
+    _: unknown,
+    commentUpdates: ILikeDislike
+  ): Promise<IComment | null> => {
+    const { commentId, voterID, voteType } = commentUpdates;
+    const comment = await CommentModel.findOne({_id: commentId});
+    let updatedComment;
+    
+    if (comment) {
+      let votersIdLikes = comment.votersIdLikes;
+      let votersIdDislikes = comment.votersIdDislikes;
+
+      // if user didn't already liked or disliked the comment
+      if (!votersIdLikes.includes(voterID) && !votersIdDislikes.includes(voterID)) {
+        votersIdLikes.push(voterID); // adds user id in the comment's "likes" array
+
+      // else if user already liked the comment
+      } else if (votersIdLikes.includes(voterID)) {
+        const index = votersIdLikes.indexOf(voterID);
+        votersIdLikes.splice(index); // removes user id from the comment's "likes" array
+        
+      // else if user already disliked the comment
+      } else if (votersIdDislikes.includes(voterID)) {
+        votersIdLikes.push(voterID); // adds user id in the comment's "dislikes" array
+        const index = votersIdDislikes.indexOf(voterID);
+        votersIdDislikes.splice(index); // removes user id from the comment's "dislikes" array
+      }
+
+      updatedComment = { ...commentUpdates, votersIdDislikes, votersIdLikes };
+      const result = await CommentModel.findByIdAndUpdate(
+        { _id: commentId },
+        { $set: updatedComment },
+        { new: true }
+      );
+      return result;
+      
+    } else {
+      return null;
+    }
+  },
+
+  dislikeComment: async (
+    _: unknown,
+    commentUpdates: ILikeDislike
+  ): Promise<IComment | null> => {
+    const { commentId, voterID, voteType } = commentUpdates;
+    const comment = await CommentModel.findOne({_id: commentId});
+    let updatedComment;
+    
+    if (comment) {
+      let votersIdLikes = comment.votersIdLikes;
+      let votersIdDislikes = comment.votersIdDislikes;
+      
+      // if user didn't already liked or disliked the comment
+      if (!votersIdDislikes.includes(voterID) && !votersIdLikes.includes(voterID)) {
+        votersIdDislikes.push(voterID); // adds user id in the comment's "dislikes" array
+        
+        // else if user already disliked the comment
+      } else if (votersIdDislikes.includes(voterID)) {
+        const index = votersIdDislikes.indexOf(voterID);
+        votersIdDislikes.splice(index); // // removes user id from the comment's "dislikes" array
+        
+        // else if user already liked the comment
+      } else if (votersIdLikes.includes(voterID)) {
+        votersIdDislikes.push(voterID); //add user id the the comment's "dislikes" array
+        const index = votersIdLikes.indexOf(voterID);
+        votersIdLikes.splice(index); // removes user id from the comment's dislikes array
+      }
+
+      updatedComment = { ...commentUpdates, votersIdDislikes, votersIdLikes };
+      const result = await CommentModel.findByIdAndUpdate(
+        { _id: commentId },
+        { $set: updatedComment },
+        { new: true }
+      );
+      return result;
+      
+    } else {
+      return null;
+    }
+  },
+}
