@@ -10,7 +10,7 @@ export default gql`
     url: [String]
     tags: [String]
     comments: [Comment]
-    like: Int
+    likes: [ID]
     dislike: Int
     createdAt: Float
     updatedAt: Float
@@ -56,6 +56,11 @@ export default gql`
       dislike: Int
       updatedAt: Float
     ): Topic
+
+    handleLikeTopic(
+      userID: ID!
+      topicID: ID!
+    ): Int
 
     deleteTopic(_id: ID!): Topic
 

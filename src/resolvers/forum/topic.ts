@@ -1,4 +1,4 @@
-import TopicModel, { ITopic, ITopicUpdates } from '../../models/Topic';
+import TopicModel, { ITopic, ITopicUpdates, ILikeTopic } from '../../models/Topic';
 import CommentModel, { IComment, ICommentUpdates, ILikeDislike } from '../../models/Comment';
 import { AuthContext } from '../../middlewares/authenticateRequest'
 
@@ -48,6 +48,67 @@ export const topicMutation = {
     );
     return topic;
   },
+
+  handleLikeTopic: async (
+    _: unknown,
+    { topicID, userID }: ILikeTopic
+  ): Promise<number | null> => {
+    try {
+      const topic = await TopicModel.findOne({ _id: topicID });
+      
+      if (topic) { 
+        const userIdIndex = topic.likes.indexOf(userID);
+        console.log(topic.likes.indexOf(userID))
+        
+        // if user didnt already liked topic
+        if (userIdIndex === -1) {
+          const likes = topic.likes;
+          likes.push(userID);
+          console.log(likes);
+  
+          try {
+            const newTopic = await TopicModel.findOneAndUpdate(
+              { _id: topicID },
+              { $set: { likes } },
+              { new: true }
+            );
+            
+            if (newTopic) return newTopic.likes.length;
+            else return null;
+          } catch(e) {
+            console.log(e);
+            return null;
+          }
+        // if user already liked topic
+        } else {
+          const likes = topic.likes;
+          likes.splice(userIdIndex);
+          console.log(likes);
+
+
+          try {
+            const newTopic = await TopicModel.findOneAndUpdate(
+              { _id: topicID },
+              { $set: { likes } },
+              { new: true }
+            );
+            
+            if (newTopic) return newTopic.likes.length;
+            else return null;
+          } catch(e) {
+            console.log(e);
+            return null;
+          }
+        }
+      } else {
+        return null;
+      }
+    } catch(e) {
+      console.log(e);
+      return null;
+    }
+  },
+  
 
   deleteTopic: async (_: unknown, topicId: string): Promise<ITopic | null> => {
     const topic = TopicModel.findOneAndDelete({ _id: topicId });

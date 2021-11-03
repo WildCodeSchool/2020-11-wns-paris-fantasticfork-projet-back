@@ -10,6 +10,7 @@ export interface ITopic extends mongoose.Document {
   url: [string];
   tags: [string];
   comments: Array<IComment>;
+  likes: [string];
 }
 export interface ITopicUpdates extends mongoose.Document {
   _id: string;
@@ -21,6 +22,11 @@ export interface ITopicUpdates extends mongoose.Document {
   lastUpdateDate?: Date;
   createdAt: Date;
   updatedAt?: Date;
+}
+
+export interface ILikeTopic extends mongoose.Document {
+  userID: string;
+  topicID: string;
 }
 
 const TopicModel = new mongoose.Schema(
@@ -49,8 +55,8 @@ const TopicModel = new mongoose.Schema(
         ref: 'Comment',
       },
     ],
-    like: {
-      type: mongoose.SchemaTypes.Number,
+    likes: {
+      type: [mongoose.SchemaTypes.ObjectId],
     },
     dislike: {
       type: mongoose.SchemaTypes.Number,
