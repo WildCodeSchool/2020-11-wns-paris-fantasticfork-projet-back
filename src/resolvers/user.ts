@@ -45,6 +45,9 @@ export const userMutation = {
       userID: user._id,
       token: createAccessToken(user),
       tokenExpiration,
+      firstname,
+      lastname,
+      role,
     };
   },
 };
